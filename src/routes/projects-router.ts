@@ -9,6 +9,7 @@ projectsRouter
   .get("/", projectsController.getAllProjects)
   .get("/:id", projectsController.getProject)
   .post("/", validateSchema(projectSchema), projectsController.createProject)
-  .patch("/", validateSchema(projectSchema), projectsController.updateProject);
+  .patch("/:id", validateSchema(projectSchema), projectsController.updateProject)
+  .delete("/:id", projectsController.deleteProject);
 
 export { projectsRouter };

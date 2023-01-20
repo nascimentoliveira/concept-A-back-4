@@ -1,10 +1,10 @@
 import { QueryResult } from "pg";
 
-import { Class } from "../../protocols.js";
-import { duplicatedNameError } from "./erros.js";
-import classRepository from "../../repositories/class-repository.js";
+import { Class } from "../protocols.js";
+import { duplicatedNameError } from "../errors/duplicated-name-error.js";
+import classRepository from "../repositories/class-repository.js";
 
-export async function createClass(classParam: CreateClassParams): Promise<QueryResult> {
+export async function createClass(classParam: ClassParams): Promise<QueryResult> {
 
   await validateUniqueNameOrFail(classParam.name);
 
@@ -14,11 +14,11 @@ export async function createClass(classParam: CreateClassParams): Promise<QueryR
 async function validateUniqueNameOrFail(name: string): Promise<void> {
   const projectWithSameName = await classRepository.findByName(name);
   if (projectWithSameName.rowCount) {
-    throw duplicatedNameError();
+    throw duplicatedNameError('class');
   }
 }
 
-export type CreateClassParams = Pick<Class, "name">;
+export type ClassParams = Pick<Class, "name">;
 
 const classesService = {
   createClass

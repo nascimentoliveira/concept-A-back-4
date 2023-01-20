@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 
-import { CreateProjectParams, UpdateProjectParams } from "../services/projects-service/projects-service.js";
-import projectsService from "../services/projects-service/projects-service.js";
+import { ProjectParams } from "../services/projects-service.js";
+import { projectsService } from "../services/projects-service.js";
 
 async function getAllProjects(req: Request, res: Response) {
 
@@ -22,13 +22,16 @@ async function getProject(req: Request, res: Response) {
     const project = await projectsService.getProject(Number(projectId));
     return res.status(httpStatus.OK).send(project.rows[0]);
   } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
+    }
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
 async function createProject(req: Request, res: Response) {
 
-  const projectParams = req.body as CreateProjectParams;
+  const projectParams = req.body as ProjectParams;
 
   try {
     const project = await projectsService.createProject(projectParams);
@@ -43,14 +46,33 @@ async function createProject(req: Request, res: Response) {
 
 async function updateProject(req: Request, res: Response) {
 
-  const projectParams = req.body as UpdateProjectParams;
+  const projectParams = req.body as ProjectParams;
+  const projectId: string = req.params.id;
 
   try {
-    const project = await projectsService.updateProject(projectParams);
+    const project = await projectsService.updateProject(projectParams, Number(projectId));
     return res.status(httpStatus.OK).send(project.rows[0]);
   } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
+    }
     if (error.name === "DuplicatedNameError") {
       return res.status(httpStatus.CONFLICT).send(error);
+    }
+    return res.status(httpStatus.BAD_REQUEST).send(error);
+  }
+}
+
+async function deleteProject(req: Request, res: Response) {
+
+  const projectId: string = req.params.id;
+
+  try {
+    const project = await projectsService.deleteProject(Number(projectId));
+    return res.status(httpStatus.OK).send(project.rows[0]);
+  } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
     }
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
@@ -60,5 +82,6 @@ export const projectsController = {
   getAllProjects,
   getProject,
   createProject,
-  updateProject
+  updateProject,
+  deleteProject
 }

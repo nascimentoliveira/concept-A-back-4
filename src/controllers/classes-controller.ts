@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 
-import { CreateProjectParams } from "../services/projects-service/projects-service.js";
-import classesService from "../services/classes-service/classes-service.js";
+import { ClassParams } from "../services/classes-service.js";
+import classesService from "../services/classes-service.js";
 
 export async function createClass(req: Request, res: Response) {
 
-  const classParams = req.body as CreateProjectParams;
+  const classParams = req.body as ClassParams;
 
   try {
     const project = await classesService.createClass(classParams);
