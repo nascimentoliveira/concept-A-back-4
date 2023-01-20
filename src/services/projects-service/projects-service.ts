@@ -4,6 +4,14 @@ import { Project } from "../../protocols.js";
 import { duplicatedNameError } from "./erros.js";
 import projectRepository from "../../repositories/project-repository.js";
 
+export async function getAllProjects(): Promise<QueryResult> {
+  return projectRepository.getAll();
+}
+
+export async function getProject(id: number): Promise<QueryResult> {
+  return projectRepository.get(id);
+}
+
 export async function createProject(project: CreateProjectParams): Promise<QueryResult> {
 
   await validateUniqueNameOrFail(project.name);
@@ -29,6 +37,8 @@ export type CreateProjectParams = Pick<Project, "name">;
 export type UpdateProjectParams = Pick<Project, "id" | "name">;
 
 const projectsService = {
+  getAllProjects,
+  getProject,
   createProject,
   updateProject
 };

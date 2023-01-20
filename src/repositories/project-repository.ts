@@ -2,6 +2,22 @@ import { QueryResult } from "pg";
 
 import database from "../database/database.js";
 
+function getAll(): Promise<QueryResult> {
+  return database.query(`
+    SELECT *
+    FROM projects`,
+  );
+}
+
+function get(id: number): Promise<QueryResult> {
+  return database.query(`
+    SELECT *
+    FROM projects
+    WHERE id=$1`,
+    [id]
+  );
+}
+
 function create(name: string): Promise<QueryResult> {
   return database.query(`
     INSERT INTO projects("name")
@@ -30,6 +46,8 @@ function update(id: number, name: string): Promise<QueryResult> {
 }
 
 const projectRepository = {
+  getAll,
+  get,
   create,
   findByName,
   update,
