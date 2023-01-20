@@ -20,9 +20,19 @@ function findByName(name: string): Promise<QueryResult> {
   );
 }
 
+function update(id: number, name: string): Promise<QueryResult> {
+  return database.query(`
+    UPDATE projects
+    SET name=$2
+    WHERE id=$1`,
+    [id, name]
+  );
+}
+
 const projectRepository = {
   create,
   findByName,
+  update,
 };
 
 
