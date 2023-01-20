@@ -10,10 +10,9 @@ const configDatabase: pg.PoolConfig = {
 };
 
 if (process.env.MODE === "prod") {
-  configDatabase.ssl = true;
+  configDatabase.ssl = { rejectUnauthorized: false };
 }
 
-export function connectDb(): pg.Pool {
-  const db: pg.Pool = new Pool(configDatabase);
-  return db;
-}
+const db: pg.Pool = new Pool(configDatabase);
+
+export default db;

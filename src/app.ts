@@ -1,15 +1,15 @@
 import express, { Express } from "express";
 import cors from "cors";
-import { connectDb } from "./database/database.js";
+import { projectsRouter } from "./routes/projects-router.js";
 
 const app = express();
 app
   .use(cors())
   .use(express.json())
-  .get("/health", (req, res) => res.send("OK!"));
+  .get("/health", (req, res) => res.send("OK!"))
+  .use("/projects", projectsRouter);
 
 export function init(): Promise<Express> {
-  connectDb();
   return Promise.resolve(app);
 }
 
