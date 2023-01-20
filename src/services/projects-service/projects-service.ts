@@ -1,8 +1,8 @@
 import { QueryResult } from "pg";
 
-import { Project } from "../protocols.js";
+import { Project } from "../../protocols.js";
 import { duplicatedNameError } from "./erros.js";
-import projectRepository from "../repositories/project-repository.js";
+import projectRepository from "../../repositories/project-repository.js";
 
 export async function createProject(project: CreateProjectParams): Promise<QueryResult> {
 

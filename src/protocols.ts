@@ -8,3 +8,9 @@ export type Project = {
   name: string
   createdAt: Date
 };
+
+export type Class = {
+  id: number
+  name: string
+  createdAt: Date
+};
