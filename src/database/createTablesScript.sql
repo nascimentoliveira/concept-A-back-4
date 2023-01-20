@@ -1,0 +1,51 @@
+CREATE TABLE "projects" (
+	"id" SERIAL NOT NULL PRIMARY KEY,
+	"name" VARCHAR(30) NOT NULL UNIQUE,
+	"createdAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "classes" (
+	"id" SERIAL NOT NULL PRIMARY KEY,
+	"name" VARCHAR(30) NOT NULL UNIQUE,
+	"createdAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "students" (
+	"id" SERIAL NOT NULL PRIMARY KEY,
+	"name" VARCHAR(70) NOT NULL UNIQUE,
+	"classId" INTEGER NOT NULL,
+	"createdAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "requirements" (
+	"id" SERIAL NOT NULL PRIMARY KEY,
+	"projectId" INTEGER NOT NULL,
+	"requeriment" TEXT NOT NULL,
+	"isBonus" BOOLEAN NOT NULL DEFAULT 'false',
+	"createdAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "projectsClasses" (
+	"id" SERIAL NOT NULL PRIMARY KEY,
+	"projectId" INTEGER NOT NULL,
+	"classId" INTEGER NOT NULL,
+	"createdAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "requerimentsStudents" (
+	"id" SERIAL NOT NULL PRIMARY KEY,
+	"requerimentId" INTEGER NOT NULL,
+	"studentId" INTEGER NOT NULL,
+	"fulfilled" BOOLEAN NOT NULL DEFAULT 'false',
+	"createdAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE "students" ADD CONSTRAINT "students_fk0" FOREIGN KEY ("classId") REFERENCES "classes"("id") ON DELETE CASCADE;
+
+ALTER TABLE "requirements" ADD CONSTRAINT "requirements_fk0" FOREIGN KEY ("projectId") REFERENCES "projects"("id") ON DELETE CASCADE;
+
+ALTER TABLE "projectsClasses" ADD CONSTRAINT "projectsClasses_fk0" FOREIGN KEY ("projectId") REFERENCES "projects"("id") ON DELETE CASCADE;
+ALTER TABLE "projectsClasses" ADD CONSTRAINT "projectsClasses_fk1" FOREIGN KEY ("classId") REFERENCES "classes"("id") ON DELETE CASCADE;
+
+ALTER TABLE "requerimentsStudents" ADD CONSTRAINT "requerimentsStudents_fk0" FOREIGN KEY ("requerimentId") REFERENCES "requirements"("id") ON DELETE CASCADE;
+ALTER TABLE "requerimentsStudents" ADD CONSTRAINT "requerimentsStudents_fk1" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE CASCADE;

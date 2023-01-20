@@ -1,0 +1,48 @@
+{
+  "name": "concept-a-back",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "API for managing and assigning grades to students",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc src/server.ts",
+    "start": "node dist/server.js",
+    "dev": "nodemon src/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nascimentoliveira/concept-A-back.git"
+  },
+  "keywords": [
+    "api",
+    "typescript",
+    "javascript",
+    "backend",
+    "grades",
+    "concepts",
+    "postgresql",
+    "express"
+  ],
+  "author": "Thiago Nascimento",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/nascimentoliveira/concept-A-back/issues"
+  },
+  "homepage": "https://github.com/nascimentoliveira/concept-A-back#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.15",
+    "@types/node": "^18.11.18",
+    "@types/pg": "^8.6.6",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pg": "^8.8.0"
+  }
+}
