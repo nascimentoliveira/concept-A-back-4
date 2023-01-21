@@ -18,20 +18,20 @@ function findById(id: number): Promise<QueryResult> {
   );
 }
 
-function create(name: string): Promise<QueryResult> {
-  return database.query(`
-    INSERT INTO "projects"("name")
-    VALUES ($1)
-    RETURNING "id", "name", "createdAt";`,
-    [name]
-  );
-}
-
 function findByName(name: string): Promise<QueryResult> {
   return database.query(`
     SELECT *
     FROM "projects"
     WHERE "name"=$1`,
+    [name]
+  );
+}
+
+function create(name: string): Promise<QueryResult> {
+  return database.query(`
+    INSERT INTO "projects"("name")
+    VALUES ($1)
+    RETURNING "id", "name", "createdAt";`,
     [name]
   );
 }
@@ -59,8 +59,8 @@ function deleteProject(id: number): Promise<QueryResult> {
 export const projectRepository = {
   getAll,
   findById,
-  create,
   findByName,
+  create,
   update,
   deleteProject
 };

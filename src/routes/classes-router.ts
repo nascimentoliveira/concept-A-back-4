@@ -1,11 +1,13 @@
 import { Router } from "express";
 import { classesSchema } from "../models/classes-model.js";
 import { validateSchema } from "../middlewares/schema-middleware.js";
-import { createClass } from "../controllers/classes-controller.js";
+import { classController } from "../controllers/classes-controller.js";
 
 const classRouter = Router();
 
 classRouter
-  .post("/", validateSchema(classesSchema), createClass);
+  .get("/", classController.getAllClasses)
+  .get("/:id", classController.getClass)
+  .post("/", validateSchema(classesSchema), classController.createClass);
 
-export { classRouter };
+export { classRouter }; 
