@@ -8,6 +8,8 @@ const classRouter = Router();
 classRouter
   .get("/", classController.getAllClasses)
   .get("/:id", classController.getClass)
-  .post("/", validateSchema(classesSchema), classController.createClass);
+  .post("/", validateSchema(classesSchema), classController.createClass)
+  .patch("/:id", validateSchema(classesSchema), classController.updateClass)
+  .delete("/:id", classController.deleteClass);
 
 export { classRouter }; 

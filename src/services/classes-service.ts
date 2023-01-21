@@ -33,6 +33,12 @@ export async function updateClass(class_: ClassParams, classId: number): Promise
   return classRepository.update(classId, class_.name);
 }
 
+export async function deleteClass(id: number): Promise<QueryResult> {
+
+  await validateIdExistsOrFail(id);
+
+  return classRepository.deleteClass(id);
+}
 
 async function validateUniqueNameOrFail(name: string): Promise<void> {
   const projectWithSameName = await classRepository.findByName(name);
@@ -44,7 +50,7 @@ async function validateUniqueNameOrFail(name: string): Promise<void> {
 async function validateIdExistsOrFail(id: number): Promise<void> {
   const classExists = await classRepository.findById(id);
   if (!classExists.rowCount) {
-    throw notFoundError("project", "id");
+    throw notFoundError("class", "id");
   }
 }
 
@@ -54,5 +60,6 @@ export const classesService = {
   getAllClasses,
   getClass,
   createClass,
-  updateClass
+  updateClass,
+  deleteClass
 };

@@ -46,10 +46,21 @@ function update(id: number, name: string): Promise<QueryResult> {
   );
 }
 
+function deleteClass(id: number): Promise<QueryResult> {
+  return database.query(`
+    DELETE 
+    FROM "classes"
+    WHERE "id"=$1
+    RETURNING "id"`,
+    [id]
+  );
+}
+
 export const classRepository = {
   getAll,
   findById,
   findByName,
   create,
-  update
+  update,
+  deleteClass
 };

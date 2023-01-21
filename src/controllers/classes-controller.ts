@@ -63,8 +63,25 @@ async function updateClass(req: Request, res: Response) {
   }
 }
 
+async function deleteClass(req: Request, res: Response) {
+
+  const classId: string = req.params.id;
+
+  try {
+    const project = await classesService.deleteClass(Number(classId));
+    return res.status(httpStatus.OK).send(project.rows[0]);
+  } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
+    }
+    return res.status(httpStatus.BAD_REQUEST).send(error);
+  }
+}
+
 export const classController = {
   getAllClasses,
   getClass,
   createClass,
+  updateClass,
+  deleteClass
 }
