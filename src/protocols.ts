@@ -14,3 +14,10 @@ export type Class = {
   name: string
   createdAt: Date
 };
+
+export type Student = {
+  id: number
+  name: string
+  classId: number
+  createdAt: Date
+};

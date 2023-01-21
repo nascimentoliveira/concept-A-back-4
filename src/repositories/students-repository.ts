@@ -5,14 +5,14 @@ import database from "../database/database.js";
 function getAll(): Promise<QueryResult> {
   return database.query(`
     SELECT *
-    FROM "classes"`,
+    FROM "students"`,
   );
 }
 
 function findById(id: number): Promise<QueryResult> {
   return database.query(`
     SELECT *
-    FROM "classes"
+    FROM "students"
     WHERE "id"=$1`,
     [id]
   );
@@ -21,46 +21,46 @@ function findById(id: number): Promise<QueryResult> {
 function findByName(name: string): Promise<QueryResult> {
   return database.query(`
     SELECT *
-    FROM classes
-    WHERE name=$1`,
+    FROM "students"
+    WHERE "name"=$1`,
     [name]
   );
 }
 
-function create(name: string): Promise<QueryResult> {
+function create(name: string, classId: number): Promise<QueryResult> {
   return database.query(`
-    INSERT INTO classes("name")
-    VALUES ($1)
-    RETURNING "id", "name", "createdAt";`,
-    [name]
+    INSERT INTO "students"("name", "classId")
+    VALUES ($1, $2)
+    RETURNING "id", "name", "classId", "createdAt";`,
+    [name, classId]
   );
 }
 
-function update(id: number, name: string): Promise<QueryResult> {
+function update(id: number, name: string, classId: number): Promise<QueryResult> {
   return database.query(`
-    UPDATE "classes"
-    SET "name"=$2
+    UPDATE "students"
+    SET "name"=$2, "classId"=$3
     WHERE "id"=$1
-    RETURNING "id", "name", "createdAt";`,
-    [id, name]
+    RETURNING "id", "name", "classId", "createdAt";`,
+    [id, name, classId]
   );
 }
 
-function deleteClass(id: number): Promise<QueryResult> {
+function deleteStudent(id: number): Promise<QueryResult> {
   return database.query(`
     DELETE 
-    FROM "classes"
+    FROM "students"
     WHERE "id"=$1
     RETURNING "id"`,
     [id]
   );
 }
 
-export const classRepository = {
+export const studentsRepository = {
   getAll,
   findById,
   findByName,
   create,
   update,
-  deleteClass
+  deleteStudent
 };
