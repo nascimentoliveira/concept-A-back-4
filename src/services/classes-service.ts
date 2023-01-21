@@ -24,6 +24,16 @@ export async function createClass(classParam: ClassParams): Promise<QueryResult>
   return classRepository.create(classParam.name);
 }
 
+export async function updateClass(class_: ClassParams, classId: number): Promise<QueryResult> {
+
+  await validateIdExistsOrFail(classId);
+
+  await validateUniqueNameOrFail(class_.name);
+
+  return classRepository.update(classId, class_.name);
+}
+
+
 async function validateUniqueNameOrFail(name: string): Promise<void> {
   const projectWithSameName = await classRepository.findByName(name);
   if (projectWithSameName.rowCount) {
@@ -44,4 +54,5 @@ export const classesService = {
   getAllClasses,
   getClass,
   createClass,
+  updateClass
 };

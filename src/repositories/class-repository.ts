@@ -36,9 +36,20 @@ function create(name: string): Promise<QueryResult> {
   );
 }
 
+function update(id: number, name: string): Promise<QueryResult> {
+  return database.query(`
+    UPDATE "classes"
+    SET "name"=$2
+    WHERE "id"=$1
+    RETURNING "id", "name", "createdAt";`,
+    [id, name]
+  );
+}
+
 export const classRepository = {
   getAll,
   findById,
   findByName,
-  create
+  create,
+  update
 };

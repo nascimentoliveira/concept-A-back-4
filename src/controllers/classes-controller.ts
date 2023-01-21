@@ -44,6 +44,25 @@ async function createClass(req: Request, res: Response) {
   }
 }
 
+async function updateClass(req: Request, res: Response) {
+
+  const classParams = req.body as ClassParams;
+  const classId: string = req.params.id;
+
+  try {
+    const class_ = await classesService.updateClass(classParams, Number(classId));
+    return res.status(httpStatus.OK).send(class_.rows[0]);
+  } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
+    }
+    if (error.name === "DuplicatedNameError") {
+      return res.status(httpStatus.CONFLICT).send(error);
+    }
+    return res.status(httpStatus.BAD_REQUEST).send(error);
+  }
+}
+
 export const classController = {
   getAllClasses,
   getClass,
