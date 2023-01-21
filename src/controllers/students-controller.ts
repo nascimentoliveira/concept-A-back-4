@@ -15,7 +15,6 @@ async function getAllStudents(req: Request, res: Response) {
 
 async function getStudentById(req: Request, res: Response) {
   const studentId: string = req.params.studentId;
-
   try {
     const student = await studentsService.getStudentById(Number(studentId));
     return res.status(httpStatus.OK).send(student.rows[0]);
@@ -28,12 +27,12 @@ async function getStudentById(req: Request, res: Response) {
 }
 
 async function getStudentsByClass(req: Request, res: Response) {
-  const classId: string = req.params.class;
-
+  const classId: string = req.params.classId;
   try {
     const students = await studentsService.getStudentsByClass(Number(classId));
     return res.status(httpStatus.OK).send(students.rows[0]);
   } catch (error) {
+    console.log(error)
     if (error.name === "NotFoundError") {
       return res.status(httpStatus.NOT_FOUND).send(error);
     }

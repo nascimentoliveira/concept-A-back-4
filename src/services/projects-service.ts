@@ -10,32 +10,23 @@ export async function getAllProjects(): Promise<QueryResult> {
 }
 
 export async function getProject(id: number): Promise<QueryResult> {
-
   await validateIdExistsOrFail(id);
-
   return projectsRepository.findById(id);
 }
 
 export async function createProject(project: ProjectParams): Promise<QueryResult> {
-
   await validateUniqueNameOrFail(project.name);
-
   return projectsRepository.create(project.name);
 }
 
 export async function updateProject(project: ProjectParams, projectId: number): Promise<QueryResult> {
-
   await validateIdExistsOrFail(projectId);
-
   await validateUniqueNameOrFail(project.name);
-
   return projectsRepository.update(projectId, project.name);
 }
 
 export async function deleteProject(id: number): Promise<QueryResult> {
-
   await validateIdExistsOrFail(id);
-
   return projectsRepository.deleteProject(id);
 }
 

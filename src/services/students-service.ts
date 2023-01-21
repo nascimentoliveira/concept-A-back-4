@@ -12,43 +12,34 @@ export async function getAllStudents(): Promise<QueryResult> {
 
 export async function getStudentById(id: number): Promise<QueryResult> {
   await validateStudentIdExistsOrFail(id);
-
   return studentsRepository.findById(id);
 }
 
 export async function getStudentsByClass(classId: number): Promise<QueryResult> {
   await validateClassIdExistsOrFail(classId);
-
   return studentsRepository.findByClass(classId);
 }
 
 export async function createStudent(student: StudentParams): Promise<QueryResult> {
   await validateUniqueNameOrFail(student.name);
-
   await validateClassIdExistsOrFail(student.classId);
-
   return studentsRepository.create(student.name, student.classId);
 }
 
 export async function updateStudent(student: StudentParams, studentId: number): Promise<QueryResult> {
   await validateStudentIdExistsOrFail(studentId);
-
   await validateClassIdExistsOrFail(student.classId);
-
   await validateUniqueNameOrFail(student.name, studentId);
-
   return studentsRepository.update(studentId, student.name, student.classId);
 }
 
 export async function deleteStudent(id: number): Promise<QueryResult> {
   await validateStudentIdExistsOrFail(id);
-
   return studentsRepository.deleteStudent(id);
 }
 
 async function validateUniqueNameOrFail(name: string, studentId?: number): Promise<void> {
   const studentWithSameName = await studentsRepository.findByName(name);
-
   if (studentId) {
     if (studentWithSameName.rowCount && studentId !== studentWithSameName.rows[0].id) {
       throw duplicatedNameError("student");

@@ -13,64 +13,45 @@ export async function getAllClasses(): Promise<QueryResult> {
 }
 
 export async function getClass(id: number): Promise<QueryResult> {
-
   await validateIdClassExistsOrFail(id);
-
   return classesRepository.findById(id);
 }
 
 export async function listProjectsByClass(id: number): Promise<QueryResult> {
-
   await validateIdClassExistsOrFail(id);
-
   return classesRepository.listProjectsByClass(id);
 }
 
 export async function listStudentsByClass(classId: number): Promise<QueryResult> {
-
   await validateIdClassExistsOrFail(classId);
-
   return studentsRepository.listStudentsByClass(classId);
 }
 
 export async function createClass(classParam: ClassParams): Promise<QueryResult> {
-
   await validateUniqueNameOrFail(classParam.name);
-
   return classesRepository.create(classParam.name);
 }
 
 export async function applyProject(classId: number, projectId: number): Promise<QueryResult> {
-
   await validateIdClassExistsOrFail(classId);
-
   await validateIdProjectExistsOrFail(projectId);
-
   return classesRepository.applyProject(classId, projectId);
 }
 
 export async function updateClass(class_: ClassParams, classId: number): Promise<QueryResult> {
-
   await validateIdClassExistsOrFail(classId);
-
   await validateUniqueNameOrFail(class_.name);
-
   return classesRepository.update(classId, class_.name);
 }
 
 export async function deleteClass(id: number): Promise<QueryResult> {
-
   await validateIdClassExistsOrFail(id);
-
   return classesRepository.deleteClass(id);
 }
 
 export async function removeProject(classId: number, projectId: number): Promise<QueryResult> {
-
   await validateIdClassExistsOrFail(classId);
-
   await validateIdProjectExistsOrFail(projectId);
-
   return classesRepository.removeProject(classId, projectId);
 }
 

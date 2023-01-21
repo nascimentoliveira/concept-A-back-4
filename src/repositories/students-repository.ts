@@ -25,8 +25,8 @@ function findByClass(classId: number): Promise<QueryResult> {
       classes.name AS "className", (
         SELECT
           json_agg(json_build_object(
-            "id", students.id,
-            "name", students.name
+            'id', students.id,
+            'name', students.name
           )) AS students
         FROM students
         JOIN classes
@@ -55,8 +55,8 @@ function listStudentsByClass(classId: number): Promise<QueryResult> {
       classes.name AS "className", (
         SELECT
           json_agg(json_build_object(
-            "id", students.id,
-            "name", students.name
+            'id', students.id,
+            'name', students.name
           )) AS "students"
         FROM students
         WHERE students."classId"=$1
