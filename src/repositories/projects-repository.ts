@@ -5,15 +5,15 @@ import database from "../database/database.js";
 function getAll(): Promise<QueryResult> {
   return database.query(`
     SELECT *
-    FROM "projects"`,
+    FROM projects`,
   );
 }
 
 function findById(id: number): Promise<QueryResult> {
   return database.query(`
     SELECT *
-    FROM "projects"
-    WHERE "id"=$1`,
+    FROM projects
+    WHERE id=$1`,
     [id]
   );
 }
@@ -21,27 +21,27 @@ function findById(id: number): Promise<QueryResult> {
 function findByName(name: string): Promise<QueryResult> {
   return database.query(`
     SELECT *
-    FROM "projects"
-    WHERE "name"=$1`,
+    FROM projects
+    WHERE name=$1`,
     [name]
   );
 }
 
 function create(name: string): Promise<QueryResult> {
   return database.query(`
-    INSERT INTO "projects"("name")
+    INSERT INTO projects("name")
     VALUES ($1)
-    RETURNING "id", "name", "createdAt";`,
+    RETURNING id, name, "createdAt";`,
     [name]
   );
 }
 
 function update(id: number, name: string): Promise<QueryResult> {
   return database.query(`
-    UPDATE "projects"
-    SET "name"=$2
-    WHERE "id"=$1
-    RETURNING "id", "name", "createdAt";`,
+    UPDATE projects
+    SET name=$2
+    WHERE id=$1
+    RETURNING id, name, "createdAt";`,
     [id, name]
   );
 }
@@ -49,9 +49,9 @@ function update(id: number, name: string): Promise<QueryResult> {
 function deleteProject(id: number): Promise<QueryResult> {
   return database.query(`
     DELETE 
-    FROM "projects"
-    WHERE "id"=$1
-    RETURNING "id"`,
+    FROM projects
+    WHERE id=$1
+    RETURNING id`,
     [id]
   );
 }

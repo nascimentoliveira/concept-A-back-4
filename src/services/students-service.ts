@@ -10,10 +10,16 @@ export async function getAllStudents(): Promise<QueryResult> {
   return studentsRepository.getAll();
 }
 
-export async function getStudent(id: number): Promise<QueryResult> {
+export async function getStudentById(id: number): Promise<QueryResult> {
   await validateStudentIdExistsOrFail(id);
 
   return studentsRepository.findById(id);
+}
+
+export async function getStudentsByClass(classId: number): Promise<QueryResult> {
+  await validateClassIdExistsOrFail(classId);
+
+  return studentsRepository.findByClass(classId);
 }
 
 export async function createStudent(student: StudentParams): Promise<QueryResult> {
@@ -52,7 +58,6 @@ async function validateUniqueNameOrFail(name: string, studentId?: number): Promi
       throw duplicatedNameError("student");
     }
   }
-
 }
 
 async function validateStudentIdExistsOrFail(id: number): Promise<void> {
@@ -73,7 +78,8 @@ export type StudentParams = Pick<Student, "name" | "classId">;
 
 export const studentsService = {
   getAllStudents,
-  getStudent,
+  getStudentById,
+  getStudentsByClass,
   createStudent,
   updateStudent,
   deleteStudent

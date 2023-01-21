@@ -5,7 +5,6 @@ import { ProjectParams } from "../services/projects-service.js";
 import { projectsService } from "../services/projects-service.js";
 
 async function getAllProjects(req: Request, res: Response) {
-
   try {
     const projects = await projectsService.getAllProjects();
     return res.status(httpStatus.OK).send(projects.rows);
@@ -15,8 +14,7 @@ async function getAllProjects(req: Request, res: Response) {
 }
 
 async function getProject(req: Request, res: Response) {
-
-  const projectId: string = req.params.id;
+  const projectId: string = req.params.projectId;
 
   try {
     const project = await projectsService.getProject(Number(projectId));
@@ -30,7 +28,6 @@ async function getProject(req: Request, res: Response) {
 }
 
 async function createProject(req: Request, res: Response) {
-
   const projectParams = req.body as ProjectParams;
 
   try {
@@ -45,9 +42,8 @@ async function createProject(req: Request, res: Response) {
 }
 
 async function updateProject(req: Request, res: Response) {
-
   const projectParams = req.body as ProjectParams;
-  const projectId: string = req.params.id;
+  const projectId: string = req.params.projectId;
 
   try {
     const project = await projectsService.updateProject(projectParams, Number(projectId));
@@ -64,8 +60,7 @@ async function updateProject(req: Request, res: Response) {
 }
 
 async function deleteProject(req: Request, res: Response) {
-
-  const projectId: string = req.params.id;
+  const projectId: string = req.params.projectId;
 
   try {
     const project = await projectsService.deleteProject(Number(projectId));

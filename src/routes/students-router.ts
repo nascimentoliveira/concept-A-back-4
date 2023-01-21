@@ -7,9 +7,10 @@ const studentsRouter = Router();
 
 studentsRouter
   .get("/", studentsController.getAllStudents)
-  .get("/:id", studentsController.getStudent)
+  .get("/:studentId", studentsController.getStudentById)
+  .get("/classes/:classId", studentsController.getStudentsByClass)
   .post("/", validateSchema(studentsSchema), studentsController.createStudent)
-  .patch("/:id", validateSchema(studentsSchema), studentsController.updateStudent)
-  .delete("/:id", studentsController.deleteStudent);
+  .patch("/:studentId", validateSchema(studentsSchema), studentsController.updateStudent)
+  .delete("/:studentId", studentsController.deleteStudent);
 
 export { studentsRouter }; 

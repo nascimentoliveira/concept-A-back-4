@@ -7,9 +7,9 @@ const projectsRouter = Router();
 
 projectsRouter
   .get("/", projectsController.getAllProjects)
-  .get("/:id", projectsController.getProject)
+  .get("/:projectId", projectsController.getProject)
   .post("/", validateSchema(projectSchema), projectsController.createProject)
-  .patch("/:id", validateSchema(projectSchema), projectsController.updateProject)
-  .delete("/:id", projectsController.deleteProject);
+  .patch("/:projectId", validateSchema(projectSchema), projectsController.updateProject)
+  .delete("/:projectId", projectsController.deleteProject);
 
 export { projectsRouter };

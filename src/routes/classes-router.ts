@@ -7,9 +7,13 @@ const classesRouter = Router();
 
 classesRouter
   .get("/", classController.getAllClasses)
-  .get("/:id", classController.getClass)
+  .get("/:classId", classController.getClass)
+  .get("/:classId/projects/", classController.listProjectsByClass)
+  .get("/:classId/students/", classController.listStudentsByClass)
   .post("/", validateSchema(classesSchema), classController.createClass)
-  .patch("/:id", validateSchema(classesSchema), classController.updateClass)
-  .delete("/:id", classController.deleteClass);
+  .post("/:classId/projects/:projectId", classController.applyProject)
+  .patch("/:classId", validateSchema(classesSchema), classController.updateClass)
+  .delete("/:classId", classController.deleteClass)
+  .delete("/:classId/projects/:projectId", classController.removeProject);
 
 export { classesRouter }; 

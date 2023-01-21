@@ -5,7 +5,6 @@ import { StudentParams } from "../services/students-service.js";
 import { studentsService } from "../services/students-service.js";
 
 async function getAllStudents(req: Request, res: Response) {
-
   try {
     const students = await studentsService.getAllStudents();
     return res.status(httpStatus.OK).send(students.rows);
@@ -14,12 +13,11 @@ async function getAllStudents(req: Request, res: Response) {
   }
 }
 
-async function getStudent(req: Request, res: Response) {
-
-  const studentId: string = req.params.id;
+async function getStudentById(req: Request, res: Response) {
+  const studentId: string = req.params.studentId;
 
   try {
-    const student = await studentsService.getStudent(Number(studentId));
+    const student = await studentsService.getStudentById(Number(studentId));
     return res.status(httpStatus.OK).send(student.rows[0]);
   } catch (error) {
     if (error.name === "NotFoundError") {
@@ -29,8 +27,21 @@ async function getStudent(req: Request, res: Response) {
   }
 }
 
-async function createStudent(req: Request, res: Response) {
+async function getStudentsByClass(req: Request, res: Response) {
+  const classId: string = req.params.class;
 
+  try {
+    const students = await studentsService.getStudentsByClass(Number(classId));
+    return res.status(httpStatus.OK).send(students.rows[0]);
+  } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
+    }
+    return res.status(httpStatus.BAD_REQUEST).send(error);
+  }
+}
+
+async function createStudent(req: Request, res: Response) {
   const projectParams = req.body as StudentParams;
 
   try {
@@ -45,9 +56,8 @@ async function createStudent(req: Request, res: Response) {
 }
 
 async function updateStudent(req: Request, res: Response) {
-
   const studentParams = req.body as StudentParams;
-  const studentId: string = req.params.id;
+  const studentId: string = req.params.studentId;
 
   try {
     const student = await studentsService.updateStudent(studentParams, Number(studentId));
@@ -64,11 +74,10 @@ async function updateStudent(req: Request, res: Response) {
 }
 
 async function deleteStudent(req: Request, res: Response) {
-
-  const projectId: string = req.params.id;
+  const studentId: string = req.params.studentId;
 
   try {
-    const student = await studentsService.deleteStudent(Number(projectId));
+    const student = await studentsService.deleteStudent(Number(studentId));
     return res.status(httpStatus.OK).send(student.rows[0]);
   } catch (error) {
     if (error.name === "NotFoundError") {
@@ -80,7 +89,8 @@ async function deleteStudent(req: Request, res: Response) {
 
 export const studentsController = {
   getAllStudents,
-  getStudent,
+  getStudentById,
+  getStudentsByClass,
   createStudent,
   updateStudent,
   deleteStudent
