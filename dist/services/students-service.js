@@ -64,7 +64,7 @@ export function getStudentsByClass(classId) {
                 case 0: return [4 /*yield*/, validateClassIdExistsOrFail(classId)];
                 case 1:
                     _a.sent();
-                    return [2 /*return*/, studentsRepository.findByClass(classId)];
+                    return [2 /*return*/, studentsRepository.listStudentsByClass(classId)];
             }
         });
     });

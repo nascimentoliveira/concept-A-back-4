@@ -5,7 +5,8 @@ import database from "../database/database.js";
 function getAll(): Promise<QueryResult> {
   return database.query(`
     SELECT *
-    FROM students`,
+    FROM students
+    ORDER BY "createdAt"`,
   );
 }
 
@@ -15,27 +16,6 @@ function findById(id: number): Promise<QueryResult> {
     FROM students
     WHERE id=$1`,
     [id]
-  );
-}
-
-function findByClass(classId: number): Promise<QueryResult> {
-  return database.query(`
-    SELECT
-      classes.id,
-      classes.name AS "className", (
-        SELECT
-          COALESCE(json_agg(json_build_object(
-            'id', students.id,
-            'name', students.name
-          )), '[]') AS students
-        FROM students
-        JOIN classes
-        ON classes.id=students."classId"
-        WHERE students."classId"=$1
-      )
-    FROM classes
-    WHERE classes.id=$1;`,
-    [classId]
   );
 }
 
@@ -100,7 +80,6 @@ export const studentsRepository = {
   getAll,
   findById,
   findByName,
-  findByClass,
   listStudentsByClass,
   create,
   update,

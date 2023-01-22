@@ -49,6 +49,7 @@ async function listStudentsByClass(req: Request, res: Response): Promise<Respons
     const students: QueryResult = await classesService.listStudentsByClass(Number(classId));
     return res.status(httpStatus.OK).send(students.rows[0]);
   } catch (error) {
+    console.log(error)
     if (error.name === "NotFoundError") {
       return res.status(httpStatus.NOT_FOUND).send(error);
     }

@@ -17,7 +17,7 @@ export async function getStudentById(id: number): Promise<QueryResult> {
 
 export async function getStudentsByClass(classId: number): Promise<QueryResult> {
   await validateClassIdExistsOrFail(classId);
-  return studentsRepository.findByClass(classId);
+  return studentsRepository.listStudentsByClass(classId);
 }
 
 export async function createStudent(student: StudentParams): Promise<QueryResult> {

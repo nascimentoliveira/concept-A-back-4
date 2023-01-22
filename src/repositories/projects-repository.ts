@@ -5,7 +5,8 @@ import database from "../database/database.js";
 function getAll(): Promise<QueryResult> {
   return database.query(`
     SELECT *
-    FROM projects`,
+    FROM projects
+    ORDER BY "createdAt"`,
   );
 }
 

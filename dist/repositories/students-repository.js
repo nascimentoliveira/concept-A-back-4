@@ -1,12 +1,9 @@
 import database from "../database/database.js";
 function getAll() {
-    return database.query("\n    SELECT *\n    FROM students");
+    return database.query("\n    SELECT *\n    FROM students\n    ORDER BY \"createdAt\"");
 }
 function findById(id) {
     return database.query("\n    SELECT *\n    FROM students\n    WHERE id=$1", [id]);
-}
-function findByClass(classId) {
-    return database.query("\n    SELECT\n      classes.id,\n      classes.name AS \"className\", (\n        SELECT\n          COALESCE(json_agg(json_build_object(\n            'id', students.id,\n            'name', students.name\n          )), '[]') AS students\n        FROM students\n        JOIN classes\n        ON classes.id=students.\"classId\"\n        WHERE students.\"classId\"=$1\n      )\n    FROM classes\n    WHERE classes.id=$1;", [classId]);
 }
 function findByName(name) {
     return database.query("\n    SELECT *\n    FROM students\n    WHERE name=$1", [name]);
@@ -27,7 +24,6 @@ export var studentsRepository = {
     getAll: getAll,
     findById: findById,
     findByName: findByName,
-    findByClass: findByClass,
     listStudentsByClass: listStudentsByClass,
     create: create,
     update: update,

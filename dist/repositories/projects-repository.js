@@ -1,6 +1,6 @@
 import database from "../database/database.js";
 function getAll() {
-    return database.query("\n    SELECT *\n    FROM projects");
+    return database.query("\n    SELECT *\n    FROM projects\n    ORDER BY \"createdAt\"");
 }
 function findById(id) {
     return database.query("\n    SELECT *\n    FROM projects\n    WHERE id=$1", [id]);

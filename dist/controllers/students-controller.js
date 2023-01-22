@@ -96,6 +96,7 @@ function getStudentsByClass(req, res) {
                     return [2 /*return*/, res.status(httpStatus.OK).send(students.rows[0])];
                 case 3:
                     error_3 = _a.sent();
+                    console.log(error_3);
                     if (error_3.name === "NotFoundError") {
                         return [2 /*return*/, res.status(httpStatus.NOT_FOUND).send(error_3)];
                     }
