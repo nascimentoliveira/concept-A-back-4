@@ -31,14 +31,14 @@ export async function deleteProject(id: number): Promise<QueryResult> {
 }
 
 async function validateUniqueNameOrFail(name: string): Promise<void> {
-  const projectWithSameName = await projectsRepository.findByName(name);
+  const projectWithSameName: QueryResult = await projectsRepository.findByName(name);
   if (projectWithSameName.rowCount) {
     throw duplicatedNameError("project");
   }
 }
 
 async function validateIdExistsOrFail(id: number): Promise<void> {
-  const projectExists = await projectsRepository.findById(id);
+  const projectExists: QueryResult = await projectsRepository.findById(id);
   if (!projectExists.rowCount) {
     throw notFoundError("project", "id");
   }

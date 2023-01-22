@@ -39,7 +39,7 @@ export async function deleteStudent(id: number): Promise<QueryResult> {
 }
 
 async function validateUniqueNameOrFail(name: string, studentId?: number): Promise<void> {
-  const studentWithSameName = await studentsRepository.findByName(name);
+  const studentWithSameName: QueryResult = await studentsRepository.findByName(name);
   if (studentId) {
     if (studentWithSameName.rowCount && studentId !== studentWithSameName.rows[0].id) {
       throw duplicatedNameError("student");
@@ -52,14 +52,14 @@ async function validateUniqueNameOrFail(name: string, studentId?: number): Promi
 }
 
 async function validateStudentIdExistsOrFail(id: number): Promise<void> {
-  const studentExists = await studentsRepository.findById(id);
+  const studentExists: QueryResult = await studentsRepository.findById(id);
   if (!studentExists.rowCount) {
     throw notFoundError("student", "id");
   }
 }
 
 async function validateClassIdExistsOrFail(id: number): Promise<void> {
-  const classExists = await classesRepository.findById(id);
+  const classExists: QueryResult = await classesRepository.findById(id);
   if (!classExists.rowCount) {
     throw notFoundError("class", "id");
   }

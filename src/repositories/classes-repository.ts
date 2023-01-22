@@ -56,10 +56,10 @@ function listProjectsByClass(classId: number): Promise<QueryResult> {
       classes.id,
       classes.name AS "className", (
         SELECT
-          json_agg(json_build_object(
+          COALESCE(json_agg(json_build_object(
             'id', "projectsClasses"."projectId",
             'name', projects.name
-          )) AS "projects"
+          )), '[]') AS "projects"
         FROM "projectsClasses"
         JOIN projects
         ON "projectsClasses"."projectId"=projects.id

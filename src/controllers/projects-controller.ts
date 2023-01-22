@@ -1,23 +1,24 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import { QueryResult } from "pg";
 
 import { ProjectParams } from "../services/projects-service.js";
 import { projectsService } from "../services/projects-service.js";
 
-async function getAllProjects(req: Request, res: Response) {
+async function getAllProjects(req: Request, res: Response): Promise<Response> {
   try {
-    const projects = await projectsService.getAllProjects();
+    const projects: QueryResult = await projectsService.getAllProjects();
     return res.status(httpStatus.OK).send(projects.rows);
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
-async function getProject(req: Request, res: Response) {
+async function getProject(req: Request, res: Response): Promise<Response> {
   const projectId: string = req.params.projectId;
 
   try {
-    const project = await projectsService.getProject(Number(projectId));
+    const project: QueryResult = await projectsService.getProject(Number(projectId));
     return res.status(httpStatus.OK).send(project.rows[0]);
   } catch (error) {
     if (error.name === "NotFoundError") {
@@ -27,11 +28,11 @@ async function getProject(req: Request, res: Response) {
   }
 }
 
-async function createProject(req: Request, res: Response) {
+async function createProject(req: Request, res: Response): Promise<Response> {
   const projectParams = req.body as ProjectParams;
 
   try {
-    const project = await projectsService.createProject(projectParams);
+    const project: QueryResult = await projectsService.createProject(projectParams);
     return res.status(httpStatus.CREATED).send(project.rows[0]);
   } catch (error) {
     if (error.name === "DuplicatedNameError") {
@@ -41,12 +42,12 @@ async function createProject(req: Request, res: Response) {
   }
 }
 
-async function updateProject(req: Request, res: Response) {
+async function updateProject(req: Request, res: Response): Promise<Response> {
   const projectParams = req.body as ProjectParams;
   const projectId: string = req.params.projectId;
 
   try {
-    const project = await projectsService.updateProject(projectParams, Number(projectId));
+    const project: QueryResult = await projectsService.updateProject(projectParams, Number(projectId));
     return res.status(httpStatus.OK).send(project.rows[0]);
   } catch (error) {
     if (error.name === "NotFoundError") {
@@ -59,11 +60,11 @@ async function updateProject(req: Request, res: Response) {
   }
 }
 
-async function deleteProject(req: Request, res: Response) {
+async function deleteProject(req: Request, res: Response): Promise<Response> {
   const projectId: string = req.params.projectId;
 
   try {
-    const project = await projectsService.deleteProject(Number(projectId));
+    const project: QueryResult = await projectsService.deleteProject(Number(projectId));
     return res.status(httpStatus.OK).send(project.rows[0]);
   } catch (error) {
     if (error.name === "NotFoundError") {

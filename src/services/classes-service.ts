@@ -7,7 +7,6 @@ import { notFoundError } from "../errors/not-found-error.js";
 import { projectsRepository } from "../repositories/projects-repository.js";
 import { studentsRepository } from "../repositories/students-repository.js";
 
-
 export async function getAllClasses(): Promise<QueryResult> {
   return classesRepository.getAll();
 }
@@ -56,21 +55,21 @@ export async function removeProject(classId: number, projectId: number): Promise
 }
 
 async function validateUniqueNameOrFail(name: string): Promise<void> {
-  const classWithSameName = await classesRepository.findByName(name);
+  const classWithSameName: QueryResult = await classesRepository.findByName(name);
   if (classWithSameName.rowCount) {
     throw duplicatedNameError("class");
   }
 }
 
 async function validateIdClassExistsOrFail(id: number): Promise<void> {
-  const classExists = await classesRepository.findById(id);
+  const classExists: QueryResult = await classesRepository.findById(id);
   if (!classExists.rowCount) {
     throw notFoundError("class", "id");
   }
 }
 
 async function validateIdProjectExistsOrFail(id: number): Promise<void> {
-  const projectExists = await projectsRepository.findById(id);
+  const projectExists: QueryResult = await projectsRepository.findById(id);
   if (!projectExists.rowCount) {
     throw notFoundError("project", "id");
   }
