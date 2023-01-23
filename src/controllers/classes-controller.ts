@@ -79,6 +79,12 @@ async function applyProject(req: Request, res: Response): Promise<Response> {
     const projectsClasses: QueryResult = await classesService.applyProject(Number(classId), Number(projectId));
     return res.status(httpStatus.CREATED).send(projectsClasses.rows[0]);
   } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
+    }
+    if (error.name === "ConflictError") {
+      return res.status(httpStatus.CONFLICT).send(error);
+    }
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
@@ -123,7 +129,12 @@ async function removeProject(req: Request, res: Response): Promise<Response> {
     const projectsClasses = await classesService.removeProject(Number(classId), Number(projectId));
     return res.status(httpStatus.OK).send(projectsClasses.rows[0]);
   } catch (error) {
-
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
+    }
+    if (error.name === "DuplicatedNameError") {
+      return res.status(httpStatus.CONFLICT).send(error);
+    }
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }

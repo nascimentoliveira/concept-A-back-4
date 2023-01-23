@@ -1,6 +1,6 @@
-export function notFoundError(entity, param) {
+export function notFoundError(message) {
     return {
         name: "NotFoundError",
-        message: "No ".concat(entity, " was found with this ").concat(param)
+        message: message
     };
 }

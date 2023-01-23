@@ -40,7 +40,7 @@ async function validateUniqueNameOrFail(name: string): Promise<void> {
 async function validateIdExistsOrFail(id: number): Promise<void> {
   const projectExists: QueryResult = await projectsRepository.findById(id);
   if (!projectExists.rowCount) {
-    throw notFoundError("project", "id");
+    throw notFoundError("No project was found with this id");
   }
 }
 

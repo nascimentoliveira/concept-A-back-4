@@ -8,6 +8,9 @@ function findById(id) {
 function findByName(name) {
     return database.query("\n    SELECT *\n    FROM classes\n    WHERE name=$1", [name]);
 }
+function findProjectApplied(classId, projectId) {
+    return database.query("\n    SELECT *\n    FROM \"projectsClasses\"\n    WHERE \"classId\"=$1 AND \"projectId\"=$2", [classId, projectId]);
+}
 function listProjectsByClass(classId) {
     return database.query("\n    SELECT\n      classes.id,\n      classes.name AS \"className\", (\n        SELECT\n          COALESCE(json_agg(json_build_object(\n            'id', \"projectsClasses\".\"projectId\",\n            'name', projects.name\n          )), '[]') AS \"projects\"\n        FROM \"projectsClasses\"\n        JOIN projects\n        ON \"projectsClasses\".\"projectId\"=projects.id\n        WHERE \"projectsClasses\".\"classId\"=$1\n      )\n    FROM classes\n    WHERE classes.id=$1;", [classId]);
 }
@@ -30,6 +33,7 @@ export var classesRepository = {
     getAll: getAll,
     findById: findById,
     findByName: findByName,
+    findProjectApplied: findProjectApplied,
     listProjectsByClass: listProjectsByClass,
     create: create,
     applyProject: applyProject,

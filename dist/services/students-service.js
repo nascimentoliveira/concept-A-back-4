@@ -146,7 +146,7 @@ function validateStudentIdExistsOrFail(id) {
                 case 1:
                     studentExists = _a.sent();
                     if (!studentExists.rowCount) {
-                        throw notFoundError("student", "id");
+                        throw notFoundError("No student was found with this id");
                     }
                     return [2 /*return*/];
             }
@@ -162,7 +162,7 @@ function validateClassIdExistsOrFail(id) {
                 case 1:
                     classExists = _a.sent();
                     if (!classExists.rowCount) {
-                        throw notFoundError("class", "id");
+                        throw notFoundError("No class was found with this id");
                     }
                     return [2 /*return*/];
             }

@@ -173,6 +173,12 @@ function applyProject(req, res) {
                     return [2 /*return*/, res.status(httpStatus.CREATED).send(projectsClasses.rows[0])];
                 case 3:
                     error_6 = _a.sent();
+                    if (error_6.name === "NotFoundError") {
+                        return [2 /*return*/, res.status(httpStatus.NOT_FOUND).send(error_6)];
+                    }
+                    if (error_6.name === "ConflictError") {
+                        return [2 /*return*/, res.status(httpStatus.CONFLICT).send(error_6)];
+                    }
                     return [2 /*return*/, res.status(httpStatus.BAD_REQUEST).send(error_6)];
                 case 4: return [2 /*return*/];
             }
@@ -250,6 +256,12 @@ function removeProject(req, res) {
                     return [2 /*return*/, res.status(httpStatus.OK).send(projectsClasses.rows[0])];
                 case 3:
                     error_9 = _a.sent();
+                    if (error_9.name === "NotFoundError") {
+                        return [2 /*return*/, res.status(httpStatus.NOT_FOUND).send(error_9)];
+                    }
+                    if (error_9.name === "DuplicatedNameError") {
+                        return [2 /*return*/, res.status(httpStatus.CONFLICT).send(error_9)];
+                    }
                     return [2 /*return*/, res.status(httpStatus.BAD_REQUEST).send(error_9)];
                 case 4: return [2 /*return*/];
             }

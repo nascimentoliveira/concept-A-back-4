@@ -50,6 +50,15 @@ function findByName(name: string): Promise<QueryResult> {
   );
 }
 
+function findProjectApplied(classId: number, projectId: number): Promise<QueryResult> {
+  return database.query(`
+    SELECT *
+    FROM "projectsClasses"
+    WHERE "classId"=$1 AND "projectId"=$2`,
+    [classId, projectId]
+  );
+}
+
 function listProjectsByClass(classId: number): Promise<QueryResult> {
   return database.query(`
     SELECT
@@ -123,6 +132,7 @@ export const classesRepository = {
   getAll,
   findById,
   findByName,
+  findProjectApplied,
   listProjectsByClass,
   create,
   applyProject,

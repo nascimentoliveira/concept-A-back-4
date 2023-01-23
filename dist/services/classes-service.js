@@ -39,6 +39,7 @@ import { classesRepository } from "../repositories/classes-repository.js";
 import { notFoundError } from "../errors/not-found-error.js";
 import { projectsRepository } from "../repositories/projects-repository.js";
 import { studentsRepository } from "../repositories/students-repository.js";
+import { conflictError } from "../errors/conflict-error.js";
 export function getAllClasses() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -104,6 +105,9 @@ export function applyProject(classId, projectId) {
                     return [4 /*yield*/, validateIdProjectExistsOrFail(projectId)];
                 case 2:
                     _a.sent();
+                    return [4 /*yield*/, checkProjectHasApplied(classId, projectId, true)];
+                case 3:
+                    _a.sent();
                     return [2 /*return*/, classesRepository.applyProject(classId, projectId)];
             }
         });
@@ -146,6 +150,9 @@ export function removeProject(classId, projectId) {
                     return [4 /*yield*/, validateIdProjectExistsOrFail(projectId)];
                 case 2:
                     _a.sent();
+                    return [4 /*yield*/, checkProjectHasApplied(classId, projectId, false)];
+                case 3:
+                    _a.sent();
                     return [2 /*return*/, classesRepository.removeProject(classId, projectId)];
             }
         });
@@ -167,32 +174,55 @@ function validateUniqueNameOrFail(name) {
         });
     });
 }
-function validateIdClassExistsOrFail(id) {
+function validateIdClassExistsOrFail(classId) {
     return __awaiter(this, void 0, void 0, function () {
         var classExists;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, classesRepository.findById(id)];
+                case 0: return [4 /*yield*/, classesRepository.findById(classId)];
                 case 1:
                     classExists = _a.sent();
                     if (!classExists.rowCount) {
-                        throw notFoundError("class", "id");
+                        throw notFoundError("No class was found with this id");
                     }
                     return [2 /*return*/];
             }
         });
     });
 }
-function validateIdProjectExistsOrFail(id) {
+function validateIdProjectExistsOrFail(projectId) {
     return __awaiter(this, void 0, void 0, function () {
         var projectExists;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, projectsRepository.findById(id)];
+                case 0: return [4 /*yield*/, projectsRepository.findById(projectId)];
                 case 1:
                     projectExists = _a.sent();
                     if (!projectExists.rowCount) {
-                        throw notFoundError("project", "id");
+                        throw notFoundError("No project was found with this id");
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function checkProjectHasApplied(classId, projectId, insert) {
+    return __awaiter(this, void 0, void 0, function () {
+        var projectHasBeenApplied;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, classesRepository.findProjectApplied(classId, projectId)];
+                case 1:
+                    projectHasBeenApplied = _a.sent();
+                    if (insert) {
+                        if (projectHasBeenApplied.rowCount) {
+                            throw conflictError("This project has already been applied to this class");
+                        }
+                    }
+                    else {
+                        if (!projectHasBeenApplied.rowCount) {
+                            throw notFoundError("This project was not applied to this class");
+                        }
                     }
                     return [2 /*return*/];
             }

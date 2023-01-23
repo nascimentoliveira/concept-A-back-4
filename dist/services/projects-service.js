@@ -120,7 +120,7 @@ function validateIdExistsOrFail(id) {
                 case 1:
                     projectExists = _a.sent();
                     if (!projectExists.rowCount) {
-                        throw notFoundError("project", "id");
+                        throw notFoundError("No project was found with this id");
                     }
                     return [2 /*return*/];
             }

@@ -54,14 +54,14 @@ async function validateUniqueNameOrFail(name: string, studentId?: number): Promi
 async function validateStudentIdExistsOrFail(id: number): Promise<void> {
   const studentExists: QueryResult = await studentsRepository.findById(id);
   if (!studentExists.rowCount) {
-    throw notFoundError("student", "id");
+    throw notFoundError("No student was found with this id");
   }
 }
 
 async function validateClassIdExistsOrFail(id: number): Promise<void> {
   const classExists: QueryResult = await classesRepository.findById(id);
   if (!classExists.rowCount) {
-    throw notFoundError("class", "id");
+    throw notFoundError("No class was found with this id");
   }
 }
 

@@ -1,8 +1,8 @@
 import { ApplicationError } from "../protocols.js";
 
-export function notFoundError(entity: string, param: string): ApplicationError {
+export function notFoundError(message: string): ApplicationError {
   return {
     name: "NotFoundError",
-    message: `No ${entity} was found with this ${param}`,
+    message: message,
   };
 }

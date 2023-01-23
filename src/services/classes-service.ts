@@ -6,6 +6,7 @@ import { classesRepository } from "../repositories/classes-repository.js";
 import { notFoundError } from "../errors/not-found-error.js";
 import { projectsRepository } from "../repositories/projects-repository.js";
 import { studentsRepository } from "../repositories/students-repository.js";
+import { conflictError } from "../errors/conflict-error.js";
 
 export async function getAllClasses(): Promise<QueryResult> {
   return classesRepository.getAll();
@@ -34,6 +35,7 @@ export async function createClass(classParam: ClassParams): Promise<QueryResult>
 export async function applyProject(classId: number, projectId: number): Promise<QueryResult> {
   await validateIdClassExistsOrFail(classId);
   await validateIdProjectExistsOrFail(projectId);
+  await checkProjectHasApplied(classId, projectId, true);
   return classesRepository.applyProject(classId, projectId);
 }
 
@@ -51,6 +53,7 @@ export async function deleteClass(id: number): Promise<QueryResult> {
 export async function removeProject(classId: number, projectId: number): Promise<QueryResult> {
   await validateIdClassExistsOrFail(classId);
   await validateIdProjectExistsOrFail(projectId);
+  await checkProjectHasApplied(classId, projectId, false);
   return classesRepository.removeProject(classId, projectId);
 }
 
@@ -61,17 +64,30 @@ async function validateUniqueNameOrFail(name: string): Promise<void> {
   }
 }
 
-async function validateIdClassExistsOrFail(id: number): Promise<void> {
-  const classExists: QueryResult = await classesRepository.findById(id);
+async function validateIdClassExistsOrFail(classId: number): Promise<void> {
+  const classExists: QueryResult = await classesRepository.findById(classId);
   if (!classExists.rowCount) {
-    throw notFoundError("class", "id");
+    throw notFoundError("No class was found with this id");
   }
 }
 
-async function validateIdProjectExistsOrFail(id: number): Promise<void> {
-  const projectExists: QueryResult = await projectsRepository.findById(id);
+async function validateIdProjectExistsOrFail(projectId: number): Promise<void> {
+  const projectExists: QueryResult = await projectsRepository.findById(projectId);
   if (!projectExists.rowCount) {
-    throw notFoundError("project", "id");
+    throw notFoundError("No project was found with this id");
+  }
+}
+
+async function checkProjectHasApplied(classId: number, projectId: number, insert: boolean): Promise<void> {
+  const projectHasBeenApplied: QueryResult = await classesRepository.findProjectApplied(classId, projectId);
+  if (insert) {
+    if (projectHasBeenApplied.rowCount) {
+      throw conflictError("This project has already been applied to this class");
+    }
+  } else {
+    if (!projectHasBeenApplied.rowCount) {
+      throw notFoundError("This project was not applied to this class");
+    }
   }
 }
 
