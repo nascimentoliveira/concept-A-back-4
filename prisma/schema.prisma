@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Class {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique @db.VarChar(30)
+  createdAt    DateTime       @default(now())
+  ProjectClass ProjectClass[]
+  Student      Student[]
+
+  @@map("classes")
+}
+
+model Student {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(70)
+  classId   Int
+  createdAt DateTime @default(now())
+  Grade     Grade[]
+  Class     Class    @relation(fields: [classId], references: [id])
+
+  @@unique([id, classId])
+  @@map("students")
+}
+
+model Project {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique @db.VarChar(30)
+  createdAt    DateTime       @default(now())
+  ProjectClass ProjectClass[]
+
+  @@map("projects")
+}
+
+model ProjectClass {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  classId   Int
+  deadline  DateTime
+  createdAt DateTime @default(now())
+  Grade     Grade[]
+  Class     Class    @relation(fields: [classId], references: [id])
+  Project   Project  @relation(fields: [projectId], references: [id])
+
+  @@unique([projectId, classId])
+  @@map("projectsClasses")
+}
+
+model Grade {
+  id             Int          @id @default(autoincrement())
+  studentId      Int
+  projectClassId Int
+  grade          Int          @default(0)
+  createdAt      DateTime     @default(now())
+  ProjectClass   ProjectClass @relation(fields: [projectClassId], references: [id])
+  Student        Student      @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, projectClassId])
+  @@map("grades")
+}
