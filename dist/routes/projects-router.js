@@ -1,11 +1,15 @@
-import { Router } from "express";
-import { projectSchema } from "../models/projects-model.js";
-import { validateSchema } from "../middlewares/schema-middleware.js";
-import { projectsController } from "../controllers/projects-controller.js";
-var projectsRouter = Router();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.projectsRouter = void 0;
+const express_1 = require("express");
+const models_1 = require("@/models");
+const middlewares_1 = require("@/middlewares");
+const controllers_1 = require("@/controllers");
+const projectsRouter = (0, express_1.Router)();
+exports.projectsRouter = projectsRouter;
 projectsRouter
-    .get("/", projectsController.getAllProjects)
-    .get("/:projectId", projectsController.getProject)
-    .post("/", validateSchema(projectSchema), projectsController.createProject)
-    .patch("/:projectId", validateSchema(projectSchema), projectsController.updateProject)["delete"]("/:projectId", projectsController.deleteProject);
-export { projectsRouter };
+    .get("/", controllers_1.projectsController.getAllProjects)
+    .get("/:projectId", controllers_1.projectsController.getProject)
+    .post("/", (0, middlewares_1.validateSchema)(models_1.projectSchema), controllers_1.projectsController.createProject)
+    .patch("/:projectId", (0, middlewares_1.validateSchema)(models_1.projectSchema), controllers_1.projectsController.updateProject)
+    .delete("/:projectId", controllers_1.projectsController.deleteProject);

@@ -1,9 +1,8 @@
 import { QueryResult } from "pg";
 
-import { Project } from "../protocols.js";
-import { duplicatedNameError } from "../errors/duplicated-name-error.js";
-import { notFoundError } from "../errors/not-found-error.js";
-import { projectsRepository } from "../repositories/projects-repository.js";
+import { Project } from "@/protocols";
+import { duplicatedNameError, notFoundError } from "@/errors";
+import { projectsRepository } from "@/repositories";
 
 export async function getAllProjects(): Promise<QueryResult> {
   return projectsRepository.getAll();
@@ -51,5 +50,5 @@ export const projectsService = {
   getProject,
   createProject,
   updateProject,
-  deleteProject
+  deleteProject,
 };

@@ -1,12 +1,7 @@
 import { QueryResult } from "pg";
-
-import { Class } from "../protocols.js";
-import { duplicatedNameError } from "../errors/duplicated-name-error.js";
-import { classesRepository } from "../repositories/classes-repository.js";
-import { notFoundError } from "../errors/not-found-error.js";
-import { projectsRepository } from "../repositories/projects-repository.js";
-import { studentsRepository } from "../repositories/students-repository.js";
-import { conflictError } from "../errors/conflict-error.js";
+import { Class } from "@/protocols";
+import { duplicatedNameError, notFoundError, conflictError } from "@/errors";
+import { projectsRepository, classesRepository, studentsRepository } from "@/repositories";
 
 export async function getAllClasses(): Promise<QueryResult> {
   return classesRepository.getAll();
@@ -102,5 +97,5 @@ export const classesService = {
   applyProject,
   updateClass,
   deleteClass,
-  removeProject
+  removeProject,
 };

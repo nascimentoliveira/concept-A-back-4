@@ -21,3 +21,11 @@ export type Student = {
   classId: number
   createdAt: Date
 };
+
+export type Grade = {
+  id: number
+  studentId: number
+  projectClassId: number
+  grade: number
+  createdAt: Date
+};

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import Joi from "joi";
-import { invalidDataError } from "../errors/invalid-data-error.js";
+import { invalidDataError } from "@/errors";
 
 export function validateSchema(schema: Joi.Schema) {
   return (req: Request, res: Response, next: NextFunction) => {

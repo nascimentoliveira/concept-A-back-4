@@ -1,9 +1,9 @@
 import { QueryResult } from "pg";
 
-import database from "../database/database.js";
+import { db } from "@/database";
 
 function getAll(): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT *
     FROM students
     ORDER BY "createdAt"`,
@@ -11,7 +11,7 @@ function getAll(): Promise<QueryResult> {
 }
 
 function findById(id: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT *
     FROM students
     WHERE id=$1`,
@@ -20,7 +20,7 @@ function findById(id: number): Promise<QueryResult> {
 }
 
 function findByName(name: string): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT *
     FROM students
     WHERE name=$1`,
@@ -29,7 +29,7 @@ function findByName(name: string): Promise<QueryResult> {
 }
 
 function listStudentsByClass(classId: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT
       classes.id,
       classes.name AS "className", (
@@ -48,7 +48,7 @@ function listStudentsByClass(classId: number): Promise<QueryResult> {
 }
 
 function create(name: string, classId: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     INSERT INTO students("name", "classId")
     VALUES ($1, $2)
     RETURNING id, name, "classId", "createdAt";`,
@@ -57,7 +57,7 @@ function create(name: string, classId: number): Promise<QueryResult> {
 }
 
 function update(id: number, name: string, classId: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     UPDATE students
     SET name=$2, "classId"=$3
     WHERE id=$1
@@ -67,7 +67,7 @@ function update(id: number, name: string, classId: number): Promise<QueryResult>
 }
 
 function deleteStudent(id: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     DELETE 
     FROM students
     WHERE id=$1

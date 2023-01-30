@@ -1,4 +1,10 @@
-import Joi from "joi";
-export var classesSchema = Joi.object({
-    name: Joi.string().required()
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.classesSchema = void 0;
+const joi_1 = __importDefault(require("joi"));
+exports.classesSchema = joi_1.default.object({
+    name: joi_1.default.string().required()
 });

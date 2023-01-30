@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { studentsSchema } from "../models/students-model.js";
-import { validateSchema } from "../middlewares/schema-middleware.js";
-import { studentsController } from "../controllers/students-controller.js";
+import { studentsSchema } from "@/models";
+import { validateSchema } from "@/middlewares";
+import { studentsController } from "@/controllers";
 
 const studentsRouter = Router();
 
@@ -13,4 +13,4 @@ studentsRouter
   .patch("/:studentId", validateSchema(studentsSchema), studentsController.updateStudent)
   .delete("/:studentId", studentsController.deleteStudent);
 
-export { studentsRouter }; 
+export { studentsRouter };

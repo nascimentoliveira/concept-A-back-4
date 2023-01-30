@@ -1,9 +1,9 @@
 import { QueryResult } from "pg";
 
-import database from "../database/database.js";
+import { db } from "@/database";
 
 function getAll(): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT *
     FROM projects
     ORDER BY "createdAt"`,
@@ -11,7 +11,7 @@ function getAll(): Promise<QueryResult> {
 }
 
 function findById(id: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT *
     FROM projects
     WHERE id=$1`,
@@ -20,7 +20,7 @@ function findById(id: number): Promise<QueryResult> {
 }
 
 function findByName(name: string): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT *
     FROM projects
     WHERE name=$1`,
@@ -29,7 +29,7 @@ function findByName(name: string): Promise<QueryResult> {
 }
 
 function create(name: string): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     INSERT INTO projects("name")
     VALUES ($1)
     RETURNING id, name, "createdAt";`,
@@ -38,7 +38,7 @@ function create(name: string): Promise<QueryResult> {
 }
 
 function update(id: number, name: string): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     UPDATE projects
     SET name=$2
     WHERE id=$1
@@ -48,7 +48,7 @@ function update(id: number, name: string): Promise<QueryResult> {
 }
 
 function deleteProject(id: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     DELETE 
     FROM projects
     WHERE id=$1

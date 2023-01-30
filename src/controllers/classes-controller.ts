@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { QueryResult } from "pg";
-
-import { ClassParams } from "../services/classes-service.js";
-import { classesService } from "../services/classes-service.js";
+import { ClassParams, classesService } from "@/services";
 
 async function getAllClasses(req: Request, res: Response): Promise<Response> {
   try {
@@ -148,5 +146,5 @@ export const classController = {
   applyProject,
   updateClass,
   deleteClass,
-  removeProject
+  removeProject,
 }

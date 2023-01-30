@@ -13,6 +13,4 @@ if (process.env.MODE === "prod") {
   configDatabase.ssl = { rejectUnauthorized: false };
 }
 
-const db: pg.Pool = new Pool(configDatabase);
-
-export default db;
+export const db: pg.Pool = new Pool(configDatabase);

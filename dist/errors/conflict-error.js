@@ -1,6 +1,10 @@
-export function conflictError(message) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.conflictError = void 0;
+function conflictError(message) {
     return {
         name: "ConflictError",
-        message: message
+        message,
     };
 }
+exports.conflictError = conflictError;

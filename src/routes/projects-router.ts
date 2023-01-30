@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { projectSchema } from "../models/projects-model.js";
-import { validateSchema } from "../middlewares/schema-middleware.js";
-import { projectsController } from "../controllers/projects-controller.js";
+import { projectSchema } from "@/models";
+import { validateSchema } from "@/middlewares";
+import { projectsController } from "@/controllers";
 
 const projectsRouter = Router();
 

@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { QueryResult } from "pg";
-
-import { StudentParams } from "../services/students-service.js";
-import { studentsService } from "../services/students-service.js";
+import { StudentParams, studentsService } from "@/services";
 
 async function getAllStudents(req: Request, res: Response): Promise<Response> {
   try {
@@ -93,5 +91,5 @@ export const studentsController = {
   getStudentsByClass,
   createStudent,
   updateStudent,
-  deleteStudent
+  deleteStudent,
 }

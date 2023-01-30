@@ -1,17 +1,22 @@
-import express from "express";
-import cors from "cors";
-import { projectsRouter } from "./routes/projects-router.js";
-import { classesRouter } from "./routes/classes-router.js";
-import { studentsRouter } from "./routes/students-router.js";
-var app = express();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.init = void 0;
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const routes_1 = require("@/routes");
+const app = (0, express_1.default)();
 app
-    .use(cors())
-    .use(express.json())
-    .get("/health", function (req, res) { return res.send("OK!"); })
-    .use("/projects", projectsRouter)
-    .use("/classes", classesRouter)
-    .use("/students", studentsRouter);
-export function init() {
+    .use((0, cors_1.default)())
+    .use(express_1.default.json())
+    .get("/health", (req, res) => res.send("OK!"))
+    .use("/projects", routes_1.projectsRouter)
+    .use("/classes", routes_1.classesRouter)
+    .use("/students", routes_1.studentsRouter);
+function init() {
     return Promise.resolve(app);
 }
-export default app;
+exports.init = init;
+exports.default = app;

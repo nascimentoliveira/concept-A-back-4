@@ -1,10 +1,7 @@
 import { QueryResult } from "pg";
-
-import { Student } from "../protocols.js";
-import { duplicatedNameError } from "../errors/duplicated-name-error.js";
-import { notFoundError } from "../errors/not-found-error.js";
-import { studentsRepository } from "../repositories/students-repository.js";
-import { classesRepository } from "../repositories/classes-repository.js";
+import { Student } from "@/protocols";
+import { duplicatedNameError, notFoundError } from "@/errors";
+import { studentsRepository, classesRepository } from "@/repositories";
 
 export async function getAllStudents(): Promise<QueryResult> {
   return studentsRepository.getAll();
@@ -73,5 +70,5 @@ export const studentsService = {
   getStudentsByClass,
   createStudent,
   updateStudent,
-  deleteStudent
+  deleteStudent,
 };

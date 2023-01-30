@@ -1,27 +1,50 @@
-import database from "../database/database.js";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.projectsRepository = void 0;
+const database_1 = require("@/database");
 function getAll() {
-    return database.query("\n    SELECT *\n    FROM projects\n    ORDER BY \"createdAt\"");
+    return database_1.db.query(`
+    SELECT *
+    FROM projects
+    ORDER BY "createdAt"`);
 }
 function findById(id) {
-    return database.query("\n    SELECT *\n    FROM projects\n    WHERE id=$1", [id]);
+    return database_1.db.query(`
+    SELECT *
+    FROM projects
+    WHERE id=$1`, [id]);
 }
 function findByName(name) {
-    return database.query("\n    SELECT *\n    FROM projects\n    WHERE name=$1", [name]);
+    return database_1.db.query(`
+    SELECT *
+    FROM projects
+    WHERE name=$1`, [name]);
 }
 function create(name) {
-    return database.query("\n    INSERT INTO projects(\"name\")\n    VALUES ($1)\n    RETURNING id, name, \"createdAt\";", [name]);
+    return database_1.db.query(`
+    INSERT INTO projects("name")
+    VALUES ($1)
+    RETURNING id, name, "createdAt";`, [name]);
 }
 function update(id, name) {
-    return database.query("\n    UPDATE projects\n    SET name=$2\n    WHERE id=$1\n    RETURNING id, name, \"createdAt\";", [id, name]);
+    return database_1.db.query(`
+    UPDATE projects
+    SET name=$2
+    WHERE id=$1
+    RETURNING id, name, "createdAt";`, [id, name]);
 }
 function deleteProject(id) {
-    return database.query("\n    DELETE \n    FROM projects\n    WHERE id=$1\n    RETURNING id", [id]);
+    return database_1.db.query(`
+    DELETE 
+    FROM projects
+    WHERE id=$1
+    RETURNING id`, [id]);
 }
-export var projectsRepository = {
-    getAll: getAll,
-    findById: findById,
-    findByName: findByName,
-    create: create,
-    update: update,
-    deleteProject: deleteProject
+exports.projectsRepository = {
+    getAll,
+    findById,
+    findByName,
+    create,
+    update,
+    deleteProject
 };

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { classesSchema } from "../models/classes-model.js";
-import { validateSchema } from "../middlewares/schema-middleware.js";
-import { classController } from "../controllers/classes-controller.js";
+import { classesSchema } from "@/models";
+import { validateSchema } from "@/middlewares";
+import { classController } from "@/controllers";
 
 const classesRouter = Router();
 

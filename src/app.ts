@@ -1,8 +1,6 @@
 import express, { Express } from "express";
 import cors from "cors";
-import { projectsRouter } from "./routes/projects-router.js";
-import { classesRouter } from "./routes/classes-router.js";
-import { studentsRouter } from "./routes/students-router.js";
+import { projectsRouter, classesRouter, studentsRouter } from "@/routes";
 
 const app = express();
 app

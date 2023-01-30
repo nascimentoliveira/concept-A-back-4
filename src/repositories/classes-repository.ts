@@ -1,9 +1,9 @@
 import { QueryResult } from "pg";
 
-import database from "../database/database.js";
+import { db } from "@/database";
 
 function getAll(): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT
       classes.id,
       classes.name, (
@@ -22,7 +22,7 @@ function getAll(): Promise<QueryResult> {
 }
 
 function findById(id: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT
       classes.id,
       classes.name, (
@@ -42,7 +42,7 @@ function findById(id: number): Promise<QueryResult> {
 }
 
 function findByName(name: string): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT *
     FROM classes
     WHERE name=$1`,
@@ -51,7 +51,7 @@ function findByName(name: string): Promise<QueryResult> {
 }
 
 function findProjectApplied(classId: number, projectId: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT *
     FROM "projectsClasses"
     WHERE "classId"=$1 AND "projectId"=$2`,
@@ -60,7 +60,7 @@ function findProjectApplied(classId: number, projectId: number): Promise<QueryRe
 }
 
 function listProjectsByClass(classId: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     SELECT
       classes.id,
       classes.name AS "className", (
@@ -81,7 +81,7 @@ function listProjectsByClass(classId: number): Promise<QueryResult> {
 }
 
 function create(name: string): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     INSERT INTO classes("name")
     VALUES ($1)
     RETURNING id, name, "createdAt";`,
@@ -90,7 +90,7 @@ function create(name: string): Promise<QueryResult> {
 }
 
 function applyProject(classId: number, projectId: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     INSERT INTO "projectsClasses"("projectId", "classId")
     VALUES ($1, $2)
     RETURNING id, "projectId", "classId", "createdAt";`,
@@ -99,7 +99,7 @@ function applyProject(classId: number, projectId: number): Promise<QueryResult> 
 }
 
 function update(id: number, name: string): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     UPDATE classes
     SET name=$2
     WHERE id=$1
@@ -109,7 +109,7 @@ function update(id: number, name: string): Promise<QueryResult> {
 }
 
 function deleteClass(id: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     DELETE 
     FROM classes
     WHERE id=$1
@@ -119,7 +119,7 @@ function deleteClass(id: number): Promise<QueryResult> {
 }
 
 function removeProject(classId: number, projectId: number): Promise<QueryResult> {
-  return database.query(`
+  return db.query(`
     DELETE 
     FROM "projectsClasses"
     WHERE "projectId"=$1 AND "classId"=$2

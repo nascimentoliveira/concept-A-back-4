@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { QueryResult } from "pg";
-
-import { ProjectParams } from "../services/projects-service.js";
-import { projectsService } from "../services/projects-service.js";
+import { ProjectParams, projectsService } from "@/services";
 
 async function getAllProjects(req: Request, res: Response): Promise<Response> {
   try {
@@ -79,5 +77,5 @@ export const projectsController = {
   getProject,
   createProject,
   updateProject,
-  deleteProject
+  deleteProject,
 }
