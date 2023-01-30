@@ -9,7 +9,7 @@ const services_1 = require("@/services");
 async function getAllProjects(req, res) {
     try {
         const projects = await services_1.projectsService.getAllProjects();
-        return res.status(http_status_1.default.OK).send(projects.rows);
+        return res.status(http_status_1.default.OK).send(projects);
     }
     catch (error) {
         return res.status(http_status_1.default.BAD_REQUEST).send(error);
@@ -19,7 +19,7 @@ async function getProject(req, res) {
     const projectId = req.params.projectId;
     try {
         const project = await services_1.projectsService.getProject(Number(projectId));
-        return res.status(http_status_1.default.OK).send(project.rows[0]);
+        return res.status(http_status_1.default.OK).send(project);
     }
     catch (error) {
         if (error.name === "NotFoundError") {
@@ -32,7 +32,7 @@ async function createProject(req, res) {
     const projectParams = req.body;
     try {
         const project = await services_1.projectsService.createProject(projectParams);
-        return res.status(http_status_1.default.CREATED).send(project.rows[0]);
+        return res.status(http_status_1.default.CREATED).send(project);
     }
     catch (error) {
         if (error.name === "DuplicatedNameError") {
@@ -46,7 +46,7 @@ async function updateProject(req, res) {
     const projectId = req.params.projectId;
     try {
         const project = await services_1.projectsService.updateProject(projectParams, Number(projectId));
-        return res.status(http_status_1.default.OK).send(project.rows[0]);
+        return res.status(http_status_1.default.OK).send(project);
     }
     catch (error) {
         if (error.name === "NotFoundError") {
@@ -62,7 +62,7 @@ async function deleteProject(req, res) {
     const projectId = req.params.projectId;
     try {
         const project = await services_1.projectsService.deleteProject(Number(projectId));
-        return res.status(http_status_1.default.OK).send(project.rows[0]);
+        return res.status(http_status_1.default.OK).send(project);
     }
     catch (error) {
         if (error.name === "NotFoundError") {

@@ -13,3 +13,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./classes-model"), exports);
 __exportStar(require("./projects-model"), exports);
 __exportStar(require("./students-model"), exports);
+__exportStar(require("./projectClass-model"), exports);

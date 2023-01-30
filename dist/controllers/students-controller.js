@@ -9,7 +9,7 @@ const services_1 = require("@/services");
 async function getAllStudents(req, res) {
     try {
         const students = await services_1.studentsService.getAllStudents();
-        return res.status(http_status_1.default.OK).send(students.rows);
+        return res.status(http_status_1.default.OK).send(students);
     }
     catch (error) {
         return res.status(http_status_1.default.BAD_REQUEST).send(error);
@@ -19,7 +19,7 @@ async function getStudentById(req, res) {
     const studentId = req.params.studentId;
     try {
         const student = await services_1.studentsService.getStudentById(Number(studentId));
-        return res.status(http_status_1.default.OK).send(student.rows[0]);
+        return res.status(http_status_1.default.OK).send(student);
     }
     catch (error) {
         if (error.name === "NotFoundError") {
@@ -32,7 +32,7 @@ async function getStudentsByClass(req, res) {
     const classId = req.params.classId;
     try {
         const students = await services_1.studentsService.getStudentsByClass(Number(classId));
-        return res.status(http_status_1.default.OK).send(students.rows[0]);
+        return res.status(http_status_1.default.OK).send(students);
     }
     catch (error) {
         console.log(error);
@@ -43,10 +43,10 @@ async function getStudentsByClass(req, res) {
     }
 }
 async function createStudent(req, res) {
-    const projectParams = req.body;
+    const studentsParams = req.body;
     try {
-        const student = await services_1.studentsService.createStudent(projectParams);
-        return res.status(http_status_1.default.CREATED).send(student.rows[0]);
+        const student = await services_1.studentsService.createStudent(studentsParams);
+        return res.status(http_status_1.default.CREATED).send(student);
     }
     catch (error) {
         if (error.name === "DuplicatedNameError") {
@@ -60,7 +60,7 @@ async function updateStudent(req, res) {
     const studentId = req.params.studentId;
     try {
         const student = await services_1.studentsService.updateStudent(studentParams, Number(studentId));
-        return res.status(http_status_1.default.OK).send(student.rows[0]);
+        return res.status(http_status_1.default.OK).send(student);
     }
     catch (error) {
         if (error.name === "NotFoundError") {
@@ -76,7 +76,7 @@ async function deleteStudent(req, res) {
     const studentId = req.params.studentId;
     try {
         const student = await services_1.studentsService.deleteStudent(Number(studentId));
-        return res.status(http_status_1.default.OK).send(student.rows[0]);
+        return res.status(http_status_1.default.OK).send(student);
     }
     catch (error) {
         if (error.name === "NotFoundError") {

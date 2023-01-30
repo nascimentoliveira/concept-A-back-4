@@ -14,7 +14,18 @@ async function getStudentById(id) {
 exports.getStudentById = getStudentById;
 async function getStudentsByClass(classId) {
     await validateClassIdExistsOrFail(classId);
-    return repositories_1.studentsRepository.listStudentsByClass(classId);
+    const class_ = await repositories_1.studentsRepository.listStudentsByClass(classId);
+    return {
+        id: class_.id,
+        className: class_.name,
+        students: class_.Student.map((s) => {
+            return {
+                studentId: s.id,
+                studentName: s.name,
+            };
+        }),
+        createdAt: class_.createdAt,
+    };
 }
 exports.getStudentsByClass = getStudentsByClass;
 async function createStudent(student) {
@@ -32,31 +43,32 @@ async function updateStudent(student, studentId) {
 exports.updateStudent = updateStudent;
 async function deleteStudent(id) {
     await validateStudentIdExistsOrFail(id);
-    return repositories_1.studentsRepository.deleteStudent(id);
+    const student = await repositories_1.studentsRepository.deleteStudent(id);
+    return { id: student.id };
 }
 exports.deleteStudent = deleteStudent;
 async function validateUniqueNameOrFail(name, studentId) {
     const studentWithSameName = await repositories_1.studentsRepository.findByName(name);
     if (studentId) {
-        if (studentWithSameName.rowCount && studentId !== studentWithSameName.rows[0].id) {
+        if (studentWithSameName && studentId !== studentWithSameName.id) {
             throw (0, errors_1.duplicatedNameError)("student");
         }
     }
     else {
-        if (studentWithSameName.rowCount) {
+        if (studentWithSameName) {
             throw (0, errors_1.duplicatedNameError)("student");
         }
     }
 }
 async function validateStudentIdExistsOrFail(id) {
     const studentExists = await repositories_1.studentsRepository.findById(id);
-    if (!studentExists.rowCount) {
+    if (!studentExists) {
         throw (0, errors_1.notFoundError)("No student was found with this id");
     }
 }
 async function validateClassIdExistsOrFail(id) {
     const classExists = await repositories_1.classesRepository.findById(id);
-    if (!classExists.rowCount) {
+    if (!classExists) {
         throw (0, errors_1.notFoundError)("No class was found with this id");
     }
 }

@@ -13,7 +13,7 @@ classesRouter
     .get("/:classId/projects/", controllers_1.classController.listProjectsByClass)
     .get("/:classId/students/", controllers_1.classController.listStudentsByClass)
     .post("/", (0, middlewares_1.validateSchema)(models_1.classesSchema), controllers_1.classController.createClass)
-    .post("/:classId/projects/:projectId", controllers_1.classController.applyProject)
+    .post("/:classId/projects/:projectId", (0, middlewares_1.validateSchema)(models_1.projectClassSchema), controllers_1.classController.applyProject)
     .patch("/:classId", (0, middlewares_1.validateSchema)(models_1.classesSchema), controllers_1.classController.updateClass)
     .delete("/:classId", controllers_1.classController.deleteClass)
     .delete("/:classId/projects/:projectId", controllers_1.classController.removeProject);

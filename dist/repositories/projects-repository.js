@@ -1,44 +1,39 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.projectsRepository = void 0;
-const database_1 = require("@/database");
+const config_1 = require("@/config");
 function getAll() {
-    return database_1.db.query(`
-    SELECT *
-    FROM projects
-    ORDER BY "createdAt"`);
+    return config_1.prisma.project.findMany({
+        orderBy: {
+            createdAt: 'asc',
+        },
+    });
 }
 function findById(id) {
-    return database_1.db.query(`
-    SELECT *
-    FROM projects
-    WHERE id=$1`, [id]);
+    return config_1.prisma.project.findUnique({
+        where: { id },
+    });
 }
 function findByName(name) {
-    return database_1.db.query(`
-    SELECT *
-    FROM projects
-    WHERE name=$1`, [name]);
+    return config_1.prisma.project.findUnique({
+        where: { name },
+    });
 }
 function create(name) {
-    return database_1.db.query(`
-    INSERT INTO projects("name")
-    VALUES ($1)
-    RETURNING id, name, "createdAt";`, [name]);
+    return config_1.prisma.project.create({
+        data: { name },
+    });
 }
 function update(id, name) {
-    return database_1.db.query(`
-    UPDATE projects
-    SET name=$2
-    WHERE id=$1
-    RETURNING id, name, "createdAt";`, [id, name]);
+    return config_1.prisma.project.update({
+        where: { id },
+        data: { name },
+    });
 }
 function deleteProject(id) {
-    return database_1.db.query(`
-    DELETE 
-    FROM projects
-    WHERE id=$1
-    RETURNING id`, [id]);
+    return config_1.prisma.project.delete({
+        where: { id },
+    });
 }
 exports.projectsRepository = {
     getAll,

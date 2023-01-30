@@ -1,60 +1,54 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.studentsRepository = void 0;
-const database_1 = require("@/database");
+const config_1 = require("@/config");
 function getAll() {
-    return database_1.db.query(`
-    SELECT *
-    FROM students
-    ORDER BY "createdAt"`);
+    return config_1.prisma.student.findMany({
+        orderBy: {
+            createdAt: 'asc',
+        },
+    });
 }
 function findById(id) {
-    return database_1.db.query(`
-    SELECT *
-    FROM students
-    WHERE id=$1`, [id]);
+    return config_1.prisma.student.findUnique({
+        where: { id },
+    });
 }
 function findByName(name) {
-    return database_1.db.query(`
-    SELECT *
-    FROM students
-    WHERE name=$1`, [name]);
+    return config_1.prisma.student.findUnique({
+        where: { name },
+    });
 }
-function listStudentsByClass(classId) {
-    return database_1.db.query(`
-    SELECT
-      classes.id,
-      classes.name AS "className", (
-        SELECT
-          COALESCE(json_agg(json_build_object(
-            'id', students.id,
-            'name', students.name
-          )), '[]') AS "students"
-        FROM students
-        WHERE students."classId"=$1
-      )
-    FROM classes
-    WHERE classes.id=$1;`, [classId]);
+function listStudentsByClass(id) {
+    return config_1.prisma.class.findUnique({
+        where: {
+            id,
+        },
+        include: {
+            Student: {
+                select: {
+                    id: true,
+                    name: true,
+                }
+            }
+        }
+    });
 }
 function create(name, classId) {
-    return database_1.db.query(`
-    INSERT INTO students("name", "classId")
-    VALUES ($1, $2)
-    RETURNING id, name, "classId", "createdAt";`, [name, classId]);
+    return config_1.prisma.student.create({
+        data: { name, classId },
+    });
 }
 function update(id, name, classId) {
-    return database_1.db.query(`
-    UPDATE students
-    SET name=$2, "classId"=$3
-    WHERE id=$1
-    RETURNING id, name, "classId", "createdAt";`, [id, name, classId]);
+    return config_1.prisma.student.update({
+        where: { id },
+        data: { name, classId },
+    });
 }
 function deleteStudent(id) {
-    return database_1.db.query(`
-    DELETE 
-    FROM students
-    WHERE id=$1
-    RETURNING id`, [id]);
+    return config_1.prisma.student.delete({
+        where: { id },
+    });
 }
 exports.studentsRepository = {
     getAll,

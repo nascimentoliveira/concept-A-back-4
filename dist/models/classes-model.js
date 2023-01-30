@@ -6,5 +6,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.classesSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.classesSchema = joi_1.default.object({
-    name: joi_1.default.string().required()
+    name: joi_1.default.string().required(),
 });
