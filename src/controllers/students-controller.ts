@@ -41,10 +41,10 @@ async function getStudentsByClass(req: Request, res: Response): Promise<Response
 }
 
 async function createStudent(req: Request, res: Response): Promise<Response> {
-  const projectParams = req.body as StudentParams;
+  const studentsParams = req.body as StudentParams;
 
   try {
-    const student: Student = await studentsService.createStudent(projectParams);
+    const student: Student = await studentsService.createStudent(studentsParams);
     return res.status(httpStatus.CREATED).send(student);
   } catch (error) {
     if (error.name === "DuplicatedNameError") {
@@ -76,7 +76,7 @@ async function deleteStudent(req: Request, res: Response): Promise<Response> {
   const studentId: string = req.params.studentId;
 
   try {
-    const student: Student = await studentsService.deleteStudent(Number(studentId));
+    const student = await studentsService.deleteStudent(Number(studentId));
     return res.status(httpStatus.OK).send(student);
   } catch (error) {
     if (error.name === "NotFoundError") {

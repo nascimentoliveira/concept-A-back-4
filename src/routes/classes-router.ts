@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { classesSchema } from "@/models";
+import { classesSchema, projectClassSchema } from "@/models";
 import { validateSchema } from "@/middlewares";
 import { classController } from "@/controllers";
 
@@ -11,7 +11,7 @@ classesRouter
   .get("/:classId/projects/", classController.listProjectsByClass)
   .get("/:classId/students/", classController.listStudentsByClass)
   .post("/", validateSchema(classesSchema), classController.createClass)
-  .post("/:classId/projects/:projectId", classController.applyProject)
+  .post("/:classId/projects/:projectId", validateSchema(projectClassSchema), classController.applyProject)
   .patch("/:classId", validateSchema(classesSchema), classController.updateClass)
   .delete("/:classId", classController.deleteClass)
   .delete("/:classId/projects/:projectId", classController.removeProject);

@@ -27,14 +27,10 @@ function listStudentsByClass(id: number) {
       id,
     },
     include: {
-      ProjectClass: {
-        include: {
-          Project: {
-            select: {
-              id: true,
-              name: true,
-            }
-          }
+      Student: {
+        select: {
+          id: true,
+          name: true,
         }
       }
     }

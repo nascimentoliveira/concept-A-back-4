@@ -1,5 +1,4 @@
-import { QueryResult } from "pg";
-import { Student } from "@/protocols";
+import { Class, Student } from "@/protocols";
 import { duplicatedNameError, notFoundError } from "@/errors";
 import { studentsRepository, classesRepository } from "@/repositories";
 
@@ -14,7 +13,18 @@ export async function getStudentById(id: number): Promise<Student> {
 
 export async function getStudentsByClass(classId: number) {
   await validateClassIdExistsOrFail(classId);
-  return studentsRepository.listStudentsByClass(classId);
+  const class_ = await studentsRepository.listStudentsByClass(classId);
+  return {
+    id: class_.id,
+    className: class_.name,
+    students: class_.Student.map((s) => {
+      return {
+        studentId: s.id,
+        studentName: s.name,
+      };
+    }),
+    createdAt: class_.createdAt,
+  };
 }
 
 export async function createStudent(student: StudentParams): Promise<Student> {
@@ -30,9 +40,10 @@ export async function updateStudent(student: StudentParams, studentId: number): 
   return studentsRepository.update(studentId, student.name, student.classId);
 }
 
-export async function deleteStudent(id: number): Promise<Student> {
+export async function deleteStudent(id: number) {
   await validateStudentIdExistsOrFail(id);
-  return studentsRepository.deleteStudent(id);
+  const student = await studentsRepository.deleteStudent(id);
+  return { id: student.id };
 }
 
 async function validateUniqueNameOrFail(name: string, studentId?: number): Promise<void> {
@@ -56,8 +67,8 @@ async function validateStudentIdExistsOrFail(id: number): Promise<void> {
 }
 
 async function validateClassIdExistsOrFail(id: number): Promise<void> {
-  const classExists: QueryResult = await classesRepository.findById(id);
-  if (!classExists.rowCount) {
+  const classExists: Class = await classesRepository.findById(id);
+  if (!classExists) {
     throw notFoundError("No class was found with this id");
   }
 }

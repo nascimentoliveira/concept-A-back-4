@@ -55,10 +55,12 @@ To view a class, you must do a `get` method at the  https://concept-a-api.onrend
 
 ```bash
 {
-  "id": 1,
-  "name": "Class 1",
-  "createdAt": "2023-01-22T22:32:37.746Z"
-}
+    "id": 1,
+    "name": "Class 1",
+    "numberOfProjects": "8",
+    "numberOfStudents": "10",
+    "createdAt": "2023-01-22T22:32:37.746Z"
+  },
 ```
 ### **4. Edit a class**
 
@@ -90,14 +92,25 @@ To delete a class, you must make a `delete` method in the https://concept-a-api.
 ```
 ### **6. Assign a project to a class**
 
-To assign a project to a class, you must make a `post` method in the route https://concept-a-api.onrender.com/classes/:classId/projects/:projectId, replacing `:classId` with the id class and `:projectId` with the id of the project you want to assign. **It is not necessary to pass a body in this route.** The api will answer a message with the following format:
+To assign a project to a class, you must make a `post` method in the route https://concept-a-api.onrender.com/classes/:classId/projects/:projectId, replacing `:classId` with the id class and `:projectId` with the id of the project you want to assign. The body of the request must have the following format
+
+```bash
+{
+  "deadline": "2023-02-28T20:58:53.822Z"
+}
+```
+if it is in the correct format the api will answer a message with the following format
+
+
+The api will answer a message with the following format:
 
 ```bash
 {
   "id": 1,
   "projectId": 1,
   "classId": 1,
-  "createdAt": "2023-01-22T22:58:44.156Z"
+  "deadline": "2023-02-28T20:58:53.822Z",
+  "createdAt": "2023-01-30T14:00:16.506Z"
 }
 ```
 
@@ -117,19 +130,21 @@ To list projects assigned to a class,you must make a `get` method in the https:/
 
 ```bash
 {
-  "id": 8,
-  "className": "Class 8",
+  "id": 1,
+  "className": "Class 1",
   "projects": [
     {
-      "id": 1,
-      "name": "Project 1"
+      "projectId": 1,
+      "projectName": "Project 1",
+      "deadline": "2023-02-28T20:58:53.822Z"
     },
     {
-      "id": 2,
-      "name": "Project 2"
+      "projectId": 2,
+      "projectName": "Project 2",
+      "deadline": "2023-02-28T20:58:53.822Z"
     },
-    ...,
-  ]
+  ],
+  "createdAt": "2023-01-29T20:58:53.796Z"
 }
 ```
 ### **9. List the students of a class**
@@ -142,15 +157,15 @@ To list students assigned to a class, you must make a `get` method in the https:
   "className": "Class 1",
   "students": [
     {
-      "id": 1,
-      "name": "Student 1"
+      "studentId": 1,
+      "studentName": "Student 1"
     },
     {
-      "id": 2,
-      "name": "Student 2"
-    },
-    ...,
-  ]
+      "studentId": 2,
+      "studentName": "Student 2"
+    }
+  ],
+  "createdAt": "2023-01-29T20:58:53.796Z"
 }
 ```
 
@@ -249,15 +264,16 @@ To list students assigned to a class, as in item 9, you must make a `get` method
   "className": "Class 1",
   "students": [
     {
-      "id": 1,
-      "name": "Student 1"
+      "studentId": 1,
+      "studentName": "Student 1"
     },
     {
-      "id": 2,
-      "name": "Student 2"
+      "studentId": 2,
+      "studentName": "Student 2"
     },
     ...,
-  ]
+  ],
+  "createdAt": "2023-01-29T20:58:53.796Z"
 }
 ```
 
@@ -289,13 +305,11 @@ To view all Projects, you must do a `get` method in the https://concept-a-api.on
   {
     "id": 1,
     "name": "Project 1",
-    "classId": 1,
     "createdAt": "2023-01-22T23:08:43.954Z"
   },
   {
     "id": 2,
     "name": "Project 2",
-    "classId": 1,
     "createdAt": "2023-01-22T23:10:49.299Z"
   },
   ...,

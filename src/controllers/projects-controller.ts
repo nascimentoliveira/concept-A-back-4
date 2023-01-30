@@ -63,7 +63,7 @@ async function deleteProject(req: Request, res: Response): Promise<Response> {
   const projectId: string = req.params.projectId;
 
   try {
-    const project: Project = await projectsService.deleteProject(Number(projectId));
+    const project = await projectsService.deleteProject(Number(projectId));
     return res.status(httpStatus.OK).send(project);
   } catch (error) {
     if (error.name === "NotFoundError") {

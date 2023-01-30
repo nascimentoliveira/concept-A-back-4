@@ -22,9 +22,10 @@ export async function updateProject(project: ProjectParams, projectId: number): 
   return projectsRepository.update(projectId, project.name);
 }
 
-export async function deleteProject(id: number): Promise<Project> {
+export async function deleteProject(id: number) {
   await validateIdExistsOrFail(id);
-  return projectsRepository.deleteProject(id);
+  const project = await projectsRepository.deleteProject(id);
+  return { id: project.id };
 }
 
 async function validateUniqueNameOrFail(name: string): Promise<void> {
