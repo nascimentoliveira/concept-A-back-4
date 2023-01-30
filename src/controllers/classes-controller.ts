@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { QueryResult } from "pg";
 import { ClassParams, classesService } from "@/services";
 import { Class } from "@/protocols";
 
