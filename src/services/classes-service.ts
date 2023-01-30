@@ -1,5 +1,5 @@
 import { QueryResult } from "pg";
-import { Class } from "@/protocols";
+import { Class, Project } from "@/protocols";
 import { duplicatedNameError, notFoundError, conflictError } from "@/errors";
 import { projectsRepository, classesRepository, studentsRepository } from "@/repositories";
 
@@ -67,8 +67,8 @@ async function validateIdClassExistsOrFail(classId: number): Promise<void> {
 }
 
 async function validateIdProjectExistsOrFail(projectId: number): Promise<void> {
-  const projectExists: QueryResult = await projectsRepository.findById(projectId);
-  if (!projectExists.rowCount) {
+  const projectExists: Project = await projectsRepository.findById(projectId);
+  if (!projectExists) {
     throw notFoundError("No project was found with this id");
   }
 }

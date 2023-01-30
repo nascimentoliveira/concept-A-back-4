@@ -1,60 +1,43 @@
-import { QueryResult } from "pg";
+import { prisma } from "@/config";
+import { Project } from "@/protocols";
 
-import { db } from "@/database";
-
-function getAll(): Promise<QueryResult> {
-  return db.query(`
-    SELECT *
-    FROM projects
-    ORDER BY "createdAt"`,
-  );
+function getAll(): Promise<Project[]> {
+  return prisma.project.findMany({
+    orderBy: {
+      createdAt: 'asc',
+    }
+  });
 }
 
-function findById(id: number): Promise<QueryResult> {
-  return db.query(`
-    SELECT *
-    FROM projects
-    WHERE id=$1`,
-    [id]
-  );
+function findById(id: number): Promise<Project> {
+  return prisma.project.findUnique({
+    where: { id },
+  });
 }
 
-function findByName(name: string): Promise<QueryResult> {
-  return db.query(`
-    SELECT *
-    FROM projects
-    WHERE name=$1`,
-    [name]
-  );
+function findByName(name: string): Promise<Project> {
+  return prisma.project.findUnique({
+    where: { name },
+  });
 }
 
-function create(name: string): Promise<QueryResult> {
-  return db.query(`
-    INSERT INTO projects("name")
-    VALUES ($1)
-    RETURNING id, name, "createdAt";`,
-    [name]
-  );
+function create(name: string): Promise<Project> {
+  return prisma.project.create({
+    data: { name },
+  });
 }
 
-function update(id: number, name: string): Promise<QueryResult> {
-  return db.query(`
-    UPDATE projects
-    SET name=$2
-    WHERE id=$1
-    RETURNING id, name, "createdAt";`,
-    [id, name]
-  );
+function update(id: number, name: string): Promise<Project> {
+  return prisma.project.update({
+    where: { id },
+    data: { name },
+  });
 }
 
-function deleteProject(id: number): Promise<QueryResult> {
-  return db.query(`
-    DELETE 
-    FROM projects
-    WHERE id=$1
-    RETURNING id`,
-    [id]
-  );
+function deleteProject(id: number): Promise<Project> {
+  return prisma.project.delete({
+    where: { id },
+  });
 }
 
 export const projectsRepository = {
