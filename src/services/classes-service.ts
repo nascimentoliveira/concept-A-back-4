@@ -17,7 +17,7 @@ export async function listProjectsByClass(id: number): Promise<QueryResult> {
   return classesRepository.listProjectsByClass(id);
 }
 
-export async function listStudentsByClass(classId: number): Promise<QueryResult> {
+export async function listStudentsByClass(classId: number) {
   await validateIdClassExistsOrFail(classId);
   return studentsRepository.listStudentsByClass(classId);
 }

@@ -5,7 +5,7 @@ function getAll(): Promise<Project[]> {
   return prisma.project.findMany({
     orderBy: {
       createdAt: 'asc',
-    }
+    },
   });
 }
 

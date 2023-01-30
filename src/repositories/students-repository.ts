@@ -1,79 +1,63 @@
-import { QueryResult } from "pg";
+import { prisma } from "@/config";
+import { Student } from "@/protocols";
 
-import { db } from "@/database";
-
-function getAll(): Promise<QueryResult> {
-  return db.query(`
-    SELECT *
-    FROM students
-    ORDER BY "createdAt"`,
-  );
+function getAll(): Promise<Student[]> {
+  return prisma.student.findMany({
+    orderBy: {
+      createdAt: 'asc',
+    },
+  });
 }
 
-function findById(id: number): Promise<QueryResult> {
-  return db.query(`
-    SELECT *
-    FROM students
-    WHERE id=$1`,
-    [id]
-  );
+function findById(id: number): Promise<Student> {
+  return prisma.student.findUnique({
+    where: { id },
+  });
 }
 
-function findByName(name: string): Promise<QueryResult> {
-  return db.query(`
-    SELECT *
-    FROM students
-    WHERE name=$1`,
-    [name]
-  );
+function findByName(name: string): Promise<Student> {
+  return prisma.student.findUnique({
+    where: { name },
+  });
 }
 
-function listStudentsByClass(classId: number): Promise<QueryResult> {
-  return db.query(`
-    SELECT
-      classes.id,
-      classes.name AS "className", (
-        SELECT
-          COALESCE(json_agg(json_build_object(
-            'id', students.id,
-            'name', students.name
-          )), '[]') AS "students"
-        FROM students
-        WHERE students."classId"=$1
-      )
-    FROM classes
-    WHERE classes.id=$1;`,
-    [classId]
-  );
+function listStudentsByClass(id: number) {
+  return prisma.class.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      ProjectClass: {
+        include: {
+          Project: {
+            select: {
+              id: true,
+              name: true,
+            }
+          }
+        }
+      }
+    }
+  });
 }
 
-function create(name: string, classId: number): Promise<QueryResult> {
-  return db.query(`
-    INSERT INTO students("name", "classId")
-    VALUES ($1, $2)
-    RETURNING id, name, "classId", "createdAt";`,
-    [name, classId]
-  );
+function create(name: string, classId: number): Promise<Student> {
+  return prisma.student.create({
+    data: { name, classId },
+  });
 }
 
-function update(id: number, name: string, classId: number): Promise<QueryResult> {
-  return db.query(`
-    UPDATE students
-    SET name=$2, "classId"=$3
-    WHERE id=$1
-    RETURNING id, name, "classId", "createdAt";`,
-    [id, name, classId]
-  );
+function update(id: number, name: string, classId: number): Promise<Student> {
+  return prisma.student.update({
+    where: { id },
+    data: { name, classId },
+  });
 }
 
-function deleteStudent(id: number): Promise<QueryResult> {
-  return db.query(`
-    DELETE 
-    FROM students
-    WHERE id=$1
-    RETURNING id`,
-    [id]
-  );
+function deleteStudent(id: number): Promise<Student> {
+  return prisma.student.delete({
+    where: { id },
+  });
 }
 
 export const studentsRepository = {
