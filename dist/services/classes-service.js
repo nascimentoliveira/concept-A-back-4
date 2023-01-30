@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.classesService = exports.removeProject = exports.deleteClass = exports.updateClass = exports.applyProject = exports.createClass = exports.listStudentsByClass = exports.listProjectsByClass = exports.getClass = exports.getAllClasses = void 0;
-const errors_1 = require("@/errors");
-const repositories_1 = require("@/repositories");
+const errors_1 = require("../errors");
+const repositories_1 = require("../repositories");
 async function getAllClasses() {
     const classes = await repositories_1.classesRepository.getAll();
     return classes.map((c) => {

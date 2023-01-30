@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.classesRepository = void 0;
-const config_1 = require("@/config");
+const config_1 = require("../config");
 function getAll() {
     return config_1.prisma.class.findMany({
         select: {

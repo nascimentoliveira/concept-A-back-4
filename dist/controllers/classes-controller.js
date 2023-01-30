@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.classController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
-const services_1 = require("@/services");
+const services_1 = require("../services");
 async function getAllClasses(req, res) {
     try {
         const classes = await services_1.classesService.getAllClasses();

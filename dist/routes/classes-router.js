@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.classesRouter = void 0;
 const express_1 = require("express");
-const models_1 = require("@/models");
-const middlewares_1 = require("@/middlewares");
-const controllers_1 = require("@/controllers");
+const models_1 = require("../models");
+const middlewares_1 = require("../middlewares");
+const controllers_1 = require("../controllers");
 const classesRouter = (0, express_1.Router)();
 exports.classesRouter = classesRouter;
 classesRouter

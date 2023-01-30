@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateSchema = void 0;
 const http_status_1 = __importDefault(require("http-status"));
-const errors_1 = require("@/errors");
+const errors_1 = require("../errors");
 function validateSchema(schema) {
     return (req, res, next) => {
         const { error } = schema.validate(req.body, { abortEarly: false });

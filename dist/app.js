@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.close = exports.init = void 0;
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const routes_1 = require("@/routes");
-const config_1 = require("@/config");
+const routes_1 = require("./routes");
+const config_1 = require("./config");
 const app = (0, express_1.default)();
 app
     .use((0, cors_1.default)())

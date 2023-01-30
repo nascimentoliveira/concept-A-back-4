@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.studentsService = exports.deleteStudent = exports.updateStudent = exports.createStudent = exports.getStudentsByClass = exports.getStudentById = exports.getAllStudents = void 0;
-const errors_1 = require("@/errors");
-const repositories_1 = require("@/repositories");
+const errors_1 = require("../errors");
+const repositories_1 = require("../repositories");
 async function getAllStudents() {
     return repositories_1.studentsRepository.getAll();
 }
