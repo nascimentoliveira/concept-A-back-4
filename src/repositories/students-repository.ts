@@ -1,5 +1,6 @@
 import { prisma } from "@/config";
 import { Student } from "@/protocols";
+import { StudentParams } from "@/services";
 
 function getAll(): Promise<Student[]> {
   return prisma.student.findMany({
@@ -21,32 +22,16 @@ function findByName(name: string): Promise<Student> {
   });
 }
 
-function listStudentsByClass(id: number) {
-  return prisma.class.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      Student: {
-        select: {
-          id: true,
-          name: true,
-        }
-      }
-    }
-  });
-}
-
-function create(name: string, classId: number): Promise<Student> {
+function create(student: StudentParams): Promise<Student> {
   return prisma.student.create({
-    data: { name, classId },
+    data: student,
   });
 }
 
-function update(id: number, name: string, classId: number): Promise<Student> {
+function update(id: number, student: StudentParams): Promise<Student> {
   return prisma.student.update({
     where: { id },
-    data: { name, classId },
+    data: student,
   });
 }
 
@@ -56,12 +41,11 @@ function deleteStudent(id: number): Promise<Student> {
   });
 }
 
-export const studentsRepository = {
+export const studentRepository = {
   getAll,
   findById,
   findByName,
-  listStudentsByClass,
   create,
   update,
-  deleteStudent
+  deleteStudent,
 };

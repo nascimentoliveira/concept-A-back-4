@@ -1,53 +1,37 @@
 import { Class, Student } from "@/protocols";
 import { duplicatedNameError, notFoundError } from "@/errors";
-import { studentsRepository, classesRepository } from "@/repositories";
+import { studentRepository, classRepository } from "@/repositories";
 
 export async function getAllStudents(): Promise<Student[]> {
-  return studentsRepository.getAll();
+  return studentRepository.getAll();
 }
 
-export async function getStudentById(id: number): Promise<Student> {
+export async function getStudentById({ id }: Pick<Student, "id">): Promise<Student> {
   await validateStudentIdExistsOrFail(id);
-  return studentsRepository.findById(id);
-}
-
-export async function getStudentsByClass(classId: number) {
-  await validateClassIdExistsOrFail(classId);
-  const class_ = await studentsRepository.listStudentsByClass(classId);
-  return {
-    id: class_.id,
-    className: class_.name,
-    students: class_.Student.map((s) => {
-      return {
-        studentId: s.id,
-        studentName: s.name,
-      };
-    }),
-    createdAt: class_.createdAt,
-  };
+  return studentRepository.findById(id);
 }
 
 export async function createStudent(student: StudentParams): Promise<Student> {
   await validateUniqueNameOrFail(student.name);
   await validateClassIdExistsOrFail(student.classId);
-  return studentsRepository.create(student.name, student.classId);
+  return studentRepository.create(student);
 }
 
-export async function updateStudent(student: StudentParams, studentId: number): Promise<Student> {
-  await validateStudentIdExistsOrFail(studentId);
-  await validateClassIdExistsOrFail(student.classId);
-  await validateUniqueNameOrFail(student.name, studentId);
-  return studentsRepository.update(studentId, student.name, student.classId);
-}
-
-export async function deleteStudent(id: number) {
+export async function updateStudent(student: StudentParams, { id }: Pick<Student, "id">): Promise<Student> {
   await validateStudentIdExistsOrFail(id);
-  const student = await studentsRepository.deleteStudent(id);
-  return { id: student.id };
+  await validateClassIdExistsOrFail(student.classId);
+  await validateUniqueNameOrFail(student.name, id);
+  return studentRepository.update(id, student);
+}
+
+export async function deleteStudent({ id }: Pick<Student, "id">): Promise<Student> {
+  await validateStudentIdExistsOrFail(id);
+  const student: Student = await studentRepository.deleteStudent(id);
+  return student;
 }
 
 async function validateUniqueNameOrFail(name: string, studentId?: number): Promise<void> {
-  const studentWithSameName: Student = await studentsRepository.findByName(name);
+  const studentWithSameName: Student = await studentRepository.findByName(name);
   if (studentId) {
     if (studentWithSameName && studentId !== studentWithSameName.id) {
       throw duplicatedNameError("student");
@@ -60,14 +44,14 @@ async function validateUniqueNameOrFail(name: string, studentId?: number): Promi
 }
 
 async function validateStudentIdExistsOrFail(id: number): Promise<void> {
-  const studentExists: Student = await studentsRepository.findById(id);
+  const studentExists: Student = await studentRepository.findById(id);
   if (!studentExists) {
     throw notFoundError("No student was found with this id");
   }
 }
 
 async function validateClassIdExistsOrFail(id: number): Promise<void> {
-  const classExists: Class = await classesRepository.findById(id);
+  const classExists: Class = await classRepository.findById(id);
   if (!classExists) {
     throw notFoundError("No class was found with this id");
   }
@@ -78,7 +62,6 @@ export type StudentParams = Pick<Student, "name" | "classId">;
 export const studentsService = {
   getAllStudents,
   getStudentById,
-  getStudentsByClass,
   createStudent,
   updateStudent,
   deleteStudent,

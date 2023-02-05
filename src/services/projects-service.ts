@@ -1,42 +1,42 @@
 import { Project } from "@/protocols";
 import { duplicatedNameError, notFoundError } from "@/errors";
-import { projectsRepository } from "@/repositories";
+import { projectRepository } from "@/repositories";
 
 export async function getAllProjects(): Promise<Project[]> {
-  return projectsRepository.getAll();
+  return projectRepository.getAll();
 }
 
-export async function getProject(id: number): Promise<Project> {
+export async function getProject({ id }: Pick<Project, "id">): Promise<Project> {
   await validateIdExistsOrFail(id);
-  return projectsRepository.findById(id);
+  return projectRepository.findById(id);
 }
 
 export async function createProject(project: ProjectParams): Promise<Project> {
-  await validateUniqueNameOrFail(project.name);
-  return projectsRepository.create(project.name);
+  await validateUniqueNameOrFail(project);
+  return projectRepository.create(project);
 }
 
-export async function updateProject(project: ProjectParams, projectId: number): Promise<Project> {
-  await validateIdExistsOrFail(projectId);
-  await validateUniqueNameOrFail(project.name);
-  return projectsRepository.update(projectId, project.name);
-}
-
-export async function deleteProject(id: number) {
+export async function updateProject(project: ProjectParams, { id }: Pick<Project, "id">): Promise<Project> {
   await validateIdExistsOrFail(id);
-  const project = await projectsRepository.deleteProject(id);
-  return { id: project.id };
+  await validateUniqueNameOrFail(project);
+  return projectRepository.update(id, project);
 }
 
-async function validateUniqueNameOrFail(name: string): Promise<void> {
-  const projectWithSameName: Project = await projectsRepository.findByName(name);
+export async function deleteProject({ id }: Pick<Project, "id">): Promise<Project> {
+  await validateIdExistsOrFail(id);
+  const project: Project = await projectRepository.deleteProject(id);
+  return project;
+}
+
+async function validateUniqueNameOrFail(project: ProjectParams): Promise<void> {
+  const projectWithSameName: Project = await projectRepository.findByName(project.name);
   if (projectWithSameName) {
     throw duplicatedNameError("project");
   }
 }
 
 async function validateIdExistsOrFail(id: number): Promise<void> {
-  const projectExists: Project = await projectsRepository.findById(id);
+  const projectExists: Project = await projectRepository.findById(id);
   if (!projectExists) {
     throw notFoundError("No project was found with this id");
   }

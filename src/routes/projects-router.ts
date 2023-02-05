@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { projectSchema } from "@/models";
 import { validateSchema } from "@/middlewares";
-import { projectsController } from "@/controllers";
+import { projectController } from "@/controllers";
 
 const projectsRouter = Router();
 
 projectsRouter
-  .get("/", projectsController.getAllProjects)
-  .get("/:projectId", projectsController.getProject)
-  .post("/", validateSchema(projectSchema), projectsController.createProject)
-  .patch("/:projectId", validateSchema(projectSchema), projectsController.updateProject)
-  .delete("/:projectId", projectsController.deleteProject);
+  .get("/", projectController.getAllProjects)
+  .get("/:projectId", projectController.getProject)
+  .post("/", validateSchema(projectSchema), projectController.createProject)
+  .patch("/:projectId", validateSchema(projectSchema), projectController.updateProject)
+  .delete("/:projectId", projectController.deleteProject);
 
 export { projectsRouter };

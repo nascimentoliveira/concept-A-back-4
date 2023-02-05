@@ -13,10 +13,9 @@ async function getAllProjects(req: Request, res: Response): Promise<Response> {
 }
 
 async function getProject(req: Request, res: Response): Promise<Response> {
-  const projectId: string = req.params.projectId;
-
+  const projectId: number = Number(req.params.projectId);
   try {
-    const project: Project = await projectsService.getProject(Number(projectId));
+    const project: Project = await projectsService.getProject({ id: projectId });
     return res.status(httpStatus.OK).send(project);
   } catch (error) {
     if (error.name === "NotFoundError") {
@@ -28,7 +27,6 @@ async function getProject(req: Request, res: Response): Promise<Response> {
 
 async function createProject(req: Request, res: Response): Promise<Response> {
   const projectParams = req.body as ProjectParams;
-
   try {
     const project: Project = await projectsService.createProject(projectParams);
     return res.status(httpStatus.CREATED).send(project);
@@ -42,10 +40,9 @@ async function createProject(req: Request, res: Response): Promise<Response> {
 
 async function updateProject(req: Request, res: Response): Promise<Response> {
   const projectParams = req.body as ProjectParams;
-  const projectId: string = req.params.projectId;
-
+  const projectId: number = Number(req.params.projectId);
   try {
-    const project: Project = await projectsService.updateProject(projectParams, Number(projectId));
+    const project: Project = await projectsService.updateProject(projectParams, { id: projectId });
     return res.status(httpStatus.OK).send(project);
   } catch (error) {
     if (error.name === "NotFoundError") {
@@ -59,11 +56,10 @@ async function updateProject(req: Request, res: Response): Promise<Response> {
 }
 
 async function deleteProject(req: Request, res: Response): Promise<Response> {
-  const projectId: string = req.params.projectId;
-
+  const projectId: number = Number(req.params.projectId);
   try {
-    const project = await projectsService.deleteProject(Number(projectId));
-    return res.status(httpStatus.OK).send(project);
+    const project: Project = await projectsService.deleteProject({ id: projectId });
+    return res.status(httpStatus.OK).send({ id: project.id });
   } catch (error) {
     if (error.name === "NotFoundError") {
       return res.status(httpStatus.NOT_FOUND).send(error);
@@ -72,7 +68,7 @@ async function deleteProject(req: Request, res: Response): Promise<Response> {
   }
 }
 
-export const projectsController = {
+export const projectController = {
   getAllProjects,
   getProject,
   createProject,

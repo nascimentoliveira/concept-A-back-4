@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { ClassParams, classesService } from "@/services";
-import { Class } from "@/protocols";
+import { Class, ClassWithProjectsListReturn, ClassWithStudentsListReturn, ProjectClass } from "@/protocols";
 
 async function getAllClasses(req: Request, res: Response): Promise<Response> {
   try {
@@ -13,41 +13,11 @@ async function getAllClasses(req: Request, res: Response): Promise<Response> {
 }
 
 async function getClass(req: Request, res: Response): Promise<Response> {
-  const classId: string = req.params.classId;
-
+  const classId: number = Number(req.params.classId);
   try {
-    const class_: Class = await classesService.getClass(Number(classId));
-    return res.status(httpStatus.OK).send(class_);
+    const _class: Class = await classesService.getClass({ id: classId });
+    return res.status(httpStatus.OK).send(_class);
   } catch (error) {
-    if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
-    }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
-  }
-}
-
-async function listProjectsByClass(req: Request, res: Response): Promise<Response> {
-  const classId: string = req.params.classId;
-
-  try {
-    const projects = await classesService.listProjectsByClass(Number(classId));
-    return res.status(httpStatus.OK).send(projects);
-  } catch (error) {
-    if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
-    }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
-  }
-}
-
-async function listStudentsByClass(req: Request, res: Response): Promise<Response> {
-  const classId: string = req.params.classId;
-
-  try {
-    const students = await classesService.listStudentsByClass(Number(classId));
-    return res.status(httpStatus.OK).send(students);
-  } catch (error) {
-    console.log(error)
     if (error.name === "NotFoundError") {
       return res.status(httpStatus.NOT_FOUND).send(error);
     }
@@ -57,10 +27,9 @@ async function listStudentsByClass(req: Request, res: Response): Promise<Respons
 
 async function createClass(req: Request, res: Response): Promise<Response> {
   const classParams = req.body as ClassParams;
-
   try {
-    const class_: Class = await classesService.createClass(classParams);
-    return res.status(httpStatus.CREATED).send(class_);
+    const _class: Class = await classesService.createClass(classParams);
+    return res.status(httpStatus.CREATED).send(_class);
   } catch (error) {
     if (error.name === "DuplicatedNameError") {
       return res.status(httpStatus.CONFLICT).send(error);
@@ -69,32 +38,12 @@ async function createClass(req: Request, res: Response): Promise<Response> {
   }
 }
 
-async function applyProject(req: Request, res: Response): Promise<Response> {
-  const classId: string = req.params.classId;
-  const projectId: string = req.params.projectId;
-  const { deadline } = req.body;
-
-  try {
-    const projectsClasses = await classesService.applyProject(Number(classId), Number(projectId), deadline);
-    return res.status(httpStatus.CREATED).send(projectsClasses);
-  } catch (error) {
-    if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
-    }
-    if (error.name === "ConflictError") {
-      return res.status(httpStatus.CONFLICT).send(error);
-    }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
-  }
-}
-
 async function updateClass(req: Request, res: Response): Promise<Response> {
   const classParams = req.body as ClassParams;
-  const classId: string = req.params.classId;
-
+  const classId: number = Number(req.params.classId);
   try {
-    const class_: Class = await classesService.updateClass(classParams, Number(classId));
-    return res.status(httpStatus.OK).send(class_);
+    const _class: Class = await classesService.updateClass(classParams, { id: classId });
+    return res.status(httpStatus.OK).send(_class);
   } catch (error) {
     if (error.name === "NotFoundError") {
       return res.status(httpStatus.NOT_FOUND).send(error);
@@ -107,11 +56,10 @@ async function updateClass(req: Request, res: Response): Promise<Response> {
 }
 
 async function deleteClass(req: Request, res: Response): Promise<Response> {
-  const classId: string = req.params.classId;
-
+  const classId: number = Number(req.params.classId);
   try {
-    const class_ = await classesService.deleteClass(Number(classId));
-    return res.status(httpStatus.OK).send(class_);
+    const _class: Class = await classesService.deleteClass({ id: classId });
+    return res.status(httpStatus.OK).send({ id: _class.id });
   } catch (error) {
     if (error.name === "NotFoundError") {
       return res.status(httpStatus.NOT_FOUND).send(error);
@@ -120,13 +68,64 @@ async function deleteClass(req: Request, res: Response): Promise<Response> {
   }
 }
 
-async function removeProject(req: Request, res: Response): Promise<Response> {
-  const classId: string = req.params.classId;
-  const projectId: string = req.params.projectId;
-
+async function listProjectsByClass(req: Request, res: Response): Promise<Response> {
+  const classId: number = Number(req.params.classId);
   try {
-    const projectsClasses = await classesService.removeProject(Number(classId), Number(projectId));
-    return res.status(httpStatus.OK).send(projectsClasses);
+    const projects: ClassWithProjectsListReturn = await classesService.listProjectsByClass({
+      id: classId
+    });
+    return res.status(httpStatus.OK).send(projects);
+  } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
+    }
+    return res.status(httpStatus.BAD_REQUEST).send(error);
+  }
+}
+
+async function listStudentsByClass(req: Request, res: Response): Promise<Response> {
+  const classId: number = Number(req.params.classId);
+  try {
+    const students: ClassWithStudentsListReturn = await classesService.listStudentsByClass({
+      id: classId
+    });
+    return res.status(httpStatus.OK).send(students);
+  } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
+    }
+    return res.status(httpStatus.BAD_REQUEST).send(error);
+  }
+}
+
+async function applyProject(req: Request, res: Response): Promise<Response> {
+  const classId: number = Number(req.params.classId);
+  const projectId: number = Number(req.params.projectId);
+  const { deadline } = req.body;
+  try {
+    const projectClass: ProjectClass = await classesService.applyProject({
+      classId: classId, projectId: projectId, deadline: deadline
+    });
+    return res.status(httpStatus.CREATED).send(projectClass);
+  } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error);
+    }
+    if (error.name === "ConflictError") {
+      return res.status(httpStatus.CONFLICT).send(error);
+    }
+    return res.status(httpStatus.BAD_REQUEST).send(error);
+  }
+}
+
+async function removeProject(req: Request, res: Response): Promise<Response> {
+  const classId: number = Number(req.params.classId);
+  const projectId: number = Number(req.params.projectId);
+  try {
+    const projectClass: ProjectClass = await classesService.removeProject({
+      classId: classId, projectId: projectId
+    });
+    return res.status(httpStatus.OK).send({ id: projectClass.id });
   } catch (error) {
     if (error.name === "NotFoundError") {
       return res.status(httpStatus.NOT_FOUND).send(error);
@@ -141,11 +140,11 @@ async function removeProject(req: Request, res: Response): Promise<Response> {
 export const classController = {
   getAllClasses,
   getClass,
-  listProjectsByClass,
-  listStudentsByClass,
   createClass,
-  applyProject,
   updateClass,
   deleteClass,
+  listProjectsByClass,
+  listStudentsByClass,
+  applyProject,
   removeProject,
 }

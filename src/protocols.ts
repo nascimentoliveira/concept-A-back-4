@@ -29,3 +29,37 @@ export type Grade = {
   grade: number
   createdAt: Date
 };
+
+export type ProjectClass = {
+  id: number
+  projectId: number
+  classId: number
+  deadline: Date
+  createdAt: Date
+}
+
+export type ClassReturn = Class & {
+  numberOfProjects: number
+  numberOfStudents: number
+};
+
+export type ClassWithProjectsListReturn = {
+  id: number
+  className: string
+  projects: {
+    projectId: number
+    projectName: string
+    deadline: Date
+  }[];
+  createdAt: Date
+}
+
+export type ClassWithStudentsListReturn = {
+  id: number
+  className: string
+  students: {
+    studentId: number
+    studentName: string
+  }[]
+  createdAt: Date
+}

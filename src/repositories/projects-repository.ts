@@ -1,5 +1,6 @@
 import { prisma } from "@/config";
 import { Project } from "@/protocols";
+import { ProjectParams } from "@/services";
 
 function getAll(): Promise<Project[]> {
   return prisma.project.findMany({
@@ -21,16 +22,16 @@ function findByName(name: string): Promise<Project> {
   });
 }
 
-function create(name: string): Promise<Project> {
+function create(projectParams: ProjectParams): Promise<Project> {
   return prisma.project.create({
-    data: { name },
+    data: projectParams,
   });
 }
 
-function update(id: number, name: string): Promise<Project> {
+function update(id: number, projectParams: ProjectParams): Promise<Project> {
   return prisma.project.update({
     where: { id },
-    data: { name },
+    data: projectParams,
   });
 }
 
@@ -40,11 +41,11 @@ function deleteProject(id: number): Promise<Project> {
   });
 }
 
-export const projectsRepository = {
+export const projectRepository = {
   getAll,
   findById,
   findByName,
   create,
   update,
-  deleteProject
+  deleteProject,
 };
