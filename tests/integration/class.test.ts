@@ -4,8 +4,7 @@ import { faker } from "@faker-js/faker";
 import dayjs from "dayjs";
 import httpStatus from "http-status";
 import supertest from "supertest";
-import { createClass, createProject, createStudent } from "../factories";
-import { assignProjectClass } from "../factories/projectClass-factory";
+import { createClass, createProject, createStudent, assignProjectClass } from "../factories";
 import { cleanDb } from "../helpers";
 
 beforeAll(async () => {
@@ -32,18 +31,22 @@ describe("POST /classes", () => {
 
   describe("when body is valid", () => {
     const generateValidBody = () => ({
-      name: `Class ${faker.datatype.number()}`,
+      name: `Class ${faker.datatype.number()}`.slice(0, 30),
+    });
+
+    it("should respond with status 409 when there is already a class with the same name", async () => {
+      const body = generateValidBody();
+      await createClass(body);
+      const response = await server.post("/classes").send(body);
+      expect(response.status).toBe(httpStatus.CONFLICT);
     });
 
     it("should respond with status 201 with class data", async () => {
       const body = generateValidBody();
-
       const response = await server.post("/classes").send(body);
-
       const _class = await prisma.class.findUnique({
         where: { name: body.name },
       });
-
       expect(response.status).toBe(httpStatus.CREATED);
       expect(response.body).toEqual(
         expect.objectContaining({
@@ -190,13 +193,22 @@ describe("PATCH /classes/:classId", () => {
 
   describe("when body is valid", () => {
     const generateValidBody = () => ({
-      name: `Class ${faker.datatype.number()}`,
+      name: `Class ${faker.datatype.number()}`.slice(0, 30),
     });
 
     it("should respond with status 404 when classId is non-existent", async () => {
       const body = generateValidBody();
       const response = await server.patch("/classes/0").send(body);
       expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
+
+    it("should respond with status 409 when there is already a project with the same name", async () => {
+      const body1 = generateValidBody();
+      await createClass(body1);
+      const body2 = generateValidBody();
+      const _class = await createClass(body2);
+      const response = await server.patch(`/classes/${_class.id}`).send(body1);
+      expect(response.status).toBe(httpStatus.CONFLICT);
     });
 
     it("should respond with status 200 with class data", async () => {
@@ -269,7 +281,6 @@ describe("POST /classes/:classId/projects/:projectId", () => {
       const project = await createProject();
       await assignProjectClass({ classId: _class.id, projectId: project.id })
       const response = await server.post(`/classes/${_class.id}/projects/${project.id}`).send(body);
-
       expect(response.status).toBe(httpStatus.CONFLICT);
     });
 

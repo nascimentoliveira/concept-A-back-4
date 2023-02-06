@@ -26,8 +26,7 @@ export async function updateStudent(student: StudentParams, { id }: Pick<Student
 
 export async function deleteStudent({ id }: Pick<Student, "id">): Promise<Student> {
   await validateStudentIdExistsOrFail(id);
-  const student: Student = await studentRepository.deleteStudent(id);
-  return student;
+  return studentRepository.deleteStudent(id);
 }
 
 async function validateUniqueNameOrFail(name: string, studentId?: number): Promise<void> {

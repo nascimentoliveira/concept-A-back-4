@@ -332,8 +332,7 @@ To edit a project, you must make a `patch` method in the https://concept-a-api-2
 
 ```bash
 {
-  "name": "New project 1",
-  "classId": "1"
+  "name": "New project 1"
 }
 ```
 if it is in the correct format the api will answer a message with the following format

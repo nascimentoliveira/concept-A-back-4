@@ -88,8 +88,7 @@ export async function updateClass(classParam: ClassParams, { id }: Pick<Class, "
 
 export async function deleteClass({ id }: Pick<Class, "id">): Promise<Class> {
   await validateIdClassExistsOrFail(id);
-  const _class: Class = await classRepository.deleteClass(id);
-  return _class;
+  return classRepository.deleteClass(id);;
 }
 
 export async function removeProject(projectClassParams: Omit<ProjectClassParams, "deadline">): Promise<ProjectClass> {

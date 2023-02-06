@@ -24,8 +24,7 @@ export async function updateProject(project: ProjectParams, { id }: Pick<Project
 
 export async function deleteProject({ id }: Pick<Project, "id">): Promise<Project> {
   await validateIdExistsOrFail(id);
-  const project: Project = await projectRepository.deleteProject(id);
-  return project;
+  return projectRepository.deleteProject(id);
 }
 
 async function validateUniqueNameOrFail(project: ProjectParams): Promise<void> {
