@@ -8,7 +8,8 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "rootDirs": [
-      "src"
+      "src",
+      "tests"
     ],
     "baseUrl": "src",
     "paths": {
@@ -23,6 +24,7 @@
     ]
   },
   "include": [
-    "src"
+    "src",
+    "tests"
   ]
 }

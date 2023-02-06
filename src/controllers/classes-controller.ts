@@ -8,6 +8,7 @@ async function getAllClasses(req: Request, res: Response): Promise<Response> {
     const classes: Class[] = await classesService.getAllClasses();
     return res.status(httpStatus.OK).send(classes);
   } catch (error) {
+    console.log(error)
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
