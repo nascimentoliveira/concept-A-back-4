@@ -36,7 +36,7 @@ export type ProjectClass = {
   classId: number
   deadline: Date
   createdAt: Date
-}
+};
 
 export type ClassReturn = Class & {
   numberOfProjects: number
@@ -52,7 +52,7 @@ export type ClassWithProjectsListReturn = {
     deadline: Date
   }[];
   createdAt: Date
-}
+};
 
 export type ClassWithStudentsListReturn = {
   id: number
@@ -62,4 +62,4 @@ export type ClassWithStudentsListReturn = {
     studentName: string
   }[]
   createdAt: Date
-}
+};

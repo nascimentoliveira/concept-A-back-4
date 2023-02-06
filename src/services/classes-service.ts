@@ -72,11 +72,12 @@ export async function createClass(classParam: ClassParams): Promise<Class> {
   return classRepository.create(classParam);
 }
 
-export async function applyProject(ProjectClassParams: ProjectClassParams): Promise<ProjectClass> {
-  await validateIdClassExistsOrFail(ProjectClassParams.classId);
-  await validateIdProjectExistsOrFail(ProjectClassParams.projectId);
-  await checkProjectHasApplied(ProjectClassParams, true);
-  return projectClassRepository.applyProject(ProjectClassParams);
+export async function applyProject(projectClassParams: ProjectClassParams): Promise<ProjectClass> {
+  await validateIdClassExistsOrFail(projectClassParams.classId);
+  await validateIdProjectExistsOrFail(projectClassParams.projectId);
+  await checkProjectHasApplied(
+    { classId: projectClassParams.classId, projectId: projectClassParams.projectId }, true);
+  return projectClassRepository.applyProject(projectClassParams);
 }
 
 export async function updateClass(classParam: ClassParams, { id }: Pick<Class, "id">): Promise<Class> {
@@ -94,7 +95,8 @@ export async function deleteClass({ id }: Pick<Class, "id">): Promise<Class> {
 export async function removeProject(projectClassParams: Omit<ProjectClassParams, "deadline">): Promise<ProjectClass> {
   await validateIdClassExistsOrFail(projectClassParams.classId);
   await validateIdProjectExistsOrFail(projectClassParams.projectId);
-  const projectClass: ProjectClass = await checkProjectHasApplied(projectClassParams, false);
+  const projectClass: ProjectClass = await checkProjectHasApplied(
+    { classId: projectClassParams.classId, projectId: projectClassParams.projectId }, false);
   await projectClassRepository.removeProject(projectClass.id);
   return projectClass;
 }

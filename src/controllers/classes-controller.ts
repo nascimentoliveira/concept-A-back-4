@@ -8,7 +8,6 @@ async function getAllClasses(req: Request, res: Response): Promise<Response> {
     const classes: Class[] = await classesService.getAllClasses();
     return res.status(httpStatus.OK).send(classes);
   } catch (error) {
-    console.log(error)
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
@@ -131,7 +130,7 @@ async function removeProject(req: Request, res: Response): Promise<Response> {
     if (error.name === "NotFoundError") {
       return res.status(httpStatus.NOT_FOUND).send(error);
     }
-    if (error.name === "DuplicatedNameError") {
+    if (error.name === "ConflictError") {
       return res.status(httpStatus.CONFLICT).send(error);
     }
     return res.status(httpStatus.BAD_REQUEST).send(error);
