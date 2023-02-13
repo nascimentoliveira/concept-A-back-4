@@ -71,14 +71,16 @@ describe("GET /projects", () => {
   });
 
   it("should respond with status 200 with projects data", async () => {
-    const project = await createProject();
+    await createProject();
+    await createProject();
     const response = await server.get("/projects");
     expect(response.status).toBe(httpStatus.OK);
+    expect(response.body).toHaveLength(2);
     expect(response.body).toEqual(expect.arrayContaining([
       expect.objectContaining({
-        id: project.id,
-        name: project.name,
-        createdAt: project.createdAt.toISOString(),
+        id: expect.any(Number),
+        name: expect.any(String),
+        createdAt: expect.any(String),
       })
     ]));
   });

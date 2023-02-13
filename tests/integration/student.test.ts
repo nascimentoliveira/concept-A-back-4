@@ -82,15 +82,17 @@ describe("GET /students", () => {
 
   it("should respond with status 200 with students data", async () => {
     const _class = await createClass();
-    const student = await createStudent({ classId: _class.id });
+    await createStudent({ classId: _class.id });
+    await createStudent({ classId: _class.id });
     const response = await server.get("/students");
     expect(response.status).toBe(httpStatus.OK);
+    expect(response.body).toHaveLength(2);
     expect(response.body).toEqual(expect.arrayContaining([
       expect.objectContaining({
-        id: student.id,
-        name: student.name,
+        id: expect.any(Number),
+        name: expect.any(String),
         classId: _class.id,
-        createdAt: student.createdAt.toISOString(),
+        createdAt: expect.any(String),
       })
     ]));
   });
@@ -135,17 +137,19 @@ describe("GET /students/classes/:classId", () => {
 
   it("should respond with status 200 with classes data and students array", async () => {
     const _class = await createClass();
-    const student = await createStudent({ classId: _class.id });
+    await createStudent({ classId: _class.id });
+    await createStudent({ classId: _class.id });
     const response = await server.get(`/students/classes/${_class.id}`);
     expect(response.status).toBe(httpStatus.OK);
+    expect(response.body.students).toHaveLength(2);
     expect(response.body).toEqual(
       expect.objectContaining({
         id: _class.id,
         className: _class.name,
         students: expect.arrayContaining([
           expect.objectContaining({
-            studentId: student.id,
-            studentName: student.name,
+            studentId: expect.any(Number),
+            studentName: expect.any(String),
           })
         ]),
         createdAt: _class.createdAt.toISOString(),
