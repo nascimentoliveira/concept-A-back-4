@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import cors from "cors";
 import { projectsRouter, classesRouter, studentsRouter } from "@/routes";
 import { connectDb, disconnectDB } from "@/config";
+import { handleApplicationErrors } from "@/middlewares";
 
 const app = express();
 app
@@ -10,7 +11,8 @@ app
   .get("/health", (req, res) => res.send("OK!"))
   .use("/projects", projectsRouter)
   .use("/classes", classesRouter)
-  .use("/students", studentsRouter);
+  .use("/students", studentsRouter)
+  .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {
   connectDb();

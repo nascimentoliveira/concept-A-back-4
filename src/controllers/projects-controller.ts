@@ -8,7 +8,9 @@ async function getAllProjects(req: Request, res: Response): Promise<Response> {
     const projects: Project[] = await projectsService.getAllProjects();
     return res.status(httpStatus.OK).send(projects);
   } catch (error) {
-    return res.status(httpStatus.BAD_REQUEST).send(error);
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: error.message,
+    });
   }
 }
 
@@ -19,9 +21,10 @@ async function getProject(req: Request, res: Response): Promise<Response> {
     return res.status(httpStatus.OK).send(project);
   } catch (error) {
     if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -32,9 +35,10 @@ async function createProject(req: Request, res: Response): Promise<Response> {
     return res.status(httpStatus.CREATED).send(project);
   } catch (error) {
     if (error.name === "DuplicatedNameError") {
-      return res.status(httpStatus.CONFLICT).send(error);
+      return res.status(httpStatus.CONFLICT).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -46,12 +50,15 @@ async function updateProject(req: Request, res: Response): Promise<Response> {
     return res.status(httpStatus.OK).send(project);
   } catch (error) {
     if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
     }
     if (error.name === "DuplicatedNameError") {
-      return res.status(httpStatus.CONFLICT).send(error);
+      return res.status(httpStatus.CONFLICT).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -62,9 +69,10 @@ async function deleteProject(req: Request, res: Response): Promise<Response> {
     return res.status(httpStatus.OK).send({ id: project.id });
   } catch (error) {
     if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 

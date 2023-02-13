@@ -1,4 +1,4 @@
-import app, { init } from "@/app";
+import app, { close, init } from "@/app";
 import { prisma } from "@/config";
 import { faker } from "@faker-js/faker";
 import dayjs from "dayjs";
@@ -13,6 +13,10 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await cleanDb();
+});
+
+afterAll(async () => {
+  await close();
 });
 
 const server = supertest(app);
@@ -103,79 +107,89 @@ describe("GET /classes/:classId", () => {
       })
     );
   });
+});
 
-  describe("GET /classes/:classId/projects", () => {
-    it("should respond with status 200 with classes data and empty projects array", async () => {
-      const _class = await createClass();
-      const response = await server.get(`/classes/${_class.id}/projects`);
-      expect(response.status).toBe(httpStatus.OK);
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          id: _class.id,
-          className: _class.name,
-          projects: expect.arrayContaining([]),
-          createdAt: _class.createdAt.toISOString(),
-        })
-      );
-    });
-
-    it("should respond with status 200 with classes data and projects array", async () => {
-      const _class = await createClass();
-      const project = await createProject();
-      const projectClass = await assignProjectClass({ classId: _class.id, projectId: project.id })
-      const response = await server.get(`/classes/${_class.id}/projects`);
-      expect(response.status).toBe(httpStatus.OK);
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          id: _class.id,
-          className: _class.name,
-          projects: expect.arrayContaining([
-            expect.objectContaining({
-              projectId: project.id,
-              projectName: project.name,
-              deadline: projectClass.deadline.toISOString(),
-            })
-          ]),
-          createdAt: _class.createdAt.toISOString(),
-        })
-      );
-    });
+describe("GET /classes/:classId/projects", () => {
+  it("should respond with status 404 when classId is non-existent", async () => {
+    const response = await server.get("/classes/0/projects");
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
   });
 
-  describe("GET /classes/:classId/students", () => {
-    it("should respond with status 200 with classes data and empty students array", async () => {
-      const _class = await createClass();
-      const response = await server.get(`/classes/${_class.id}/students`);
-      expect(response.status).toBe(httpStatus.OK);
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          id: _class.id,
-          className: _class.name,
-          students: expect.arrayContaining([]),
-          createdAt: _class.createdAt.toISOString(),
-        })
-      );
-    });
+  it("should respond with status 200 with classes data and empty projects array", async () => {
+    const _class = await createClass();
+    const response = await server.get(`/classes/${_class.id}/projects`);
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: _class.id,
+        className: _class.name,
+        projects: expect.arrayContaining([]),
+        createdAt: _class.createdAt.toISOString(),
+      })
+    );
+  });
 
-    it("should respond with status 200 with classes data and students array", async () => {
-      const _class = await createClass();
-      const student = await createStudent({ classId: _class.id });
-      const response = await server.get(`/classes/${_class.id}/students`);
-      expect(response.status).toBe(httpStatus.OK);
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          id: _class.id,
-          className: _class.name,
-          students: expect.arrayContaining([
-            expect.objectContaining({
-              studentId: student.id,
-              studentName: student.name,
-            })
-          ]),
-          createdAt: _class.createdAt.toISOString(),
-        })
-      );
-    });
+  it("should respond with status 200 with classes data and projects array", async () => {
+    const _class = await createClass();
+    const project = await createProject();
+    const projectClass = await assignProjectClass({ classId: _class.id, projectId: project.id })
+    const response = await server.get(`/classes/${_class.id}/projects`);
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: _class.id,
+        className: _class.name,
+        projects: expect.arrayContaining([
+          expect.objectContaining({
+            projectId: project.id,
+            projectName: project.name,
+            deadline: projectClass.deadline.toISOString(),
+          })
+        ]),
+        createdAt: _class.createdAt.toISOString(),
+      })
+    );
+  });
+});
+
+describe("GET /classes/:classId/students", () => {
+  it("should respond with status 404 when classId is non-existent", async () => {
+    const response = await server.get("/classes/0/students");
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
+  });
+
+  it("should respond with status 200 with classes data and empty students array", async () => {
+    const _class = await createClass();
+    const response = await server.get(`/classes/${_class.id}/students`);
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: _class.id,
+        className: _class.name,
+        students: expect.arrayContaining([]),
+        createdAt: _class.createdAt.toISOString(),
+      })
+    );
+  });
+
+  it("should respond with status 200 with classes data and students array", async () => {
+    const _class = await createClass();
+    const student = await createStudent({ classId: _class.id });
+    const response = await server.get(`/classes/${_class.id}/students`);
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: _class.id,
+        className: _class.name,
+        students: expect.arrayContaining([
+          expect.objectContaining({
+            studentId: student.id,
+            studentName: student.name,
+          })
+        ]),
+        createdAt: _class.createdAt.toISOString(),
+      })
+    );
   });
 });
 
@@ -264,7 +278,7 @@ describe("POST /classes/:classId/projects/:projectId", () => {
 
     it("should respond with status 404 when classId is non-existent", async () => {
       const body = generateValidBody();
-      const response = await server.post("/classes/0/project/0").send(body);
+      const response = await server.post("/classes/0/projects/0").send(body);
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
@@ -311,7 +325,7 @@ describe("POST /classes/:classId/projects/:projectId", () => {
 
 describe("DELETE /classes/:classId/projects/:projectId", () => {
   it("should respond with status 404 when classId is non-existent", async () => {
-    const response = await server.delete("/classes/0/project/0");
+    const response = await server.delete("/classes/0/projects/0");
     expect(response.status).toBe(httpStatus.NOT_FOUND);
   });
 

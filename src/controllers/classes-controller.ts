@@ -8,7 +8,6 @@ async function getAllClasses(req: Request, res: Response): Promise<Response> {
     const classes: Class[] = await classesService.getAllClasses();
     return res.status(httpStatus.OK).send(classes);
   } catch (error) {
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -19,9 +18,10 @@ async function getClass(req: Request, res: Response): Promise<Response> {
     return res.status(httpStatus.OK).send(_class);
   } catch (error) {
     if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -32,9 +32,10 @@ async function createClass(req: Request, res: Response): Promise<Response> {
     return res.status(httpStatus.CREATED).send(_class);
   } catch (error) {
     if (error.name === "DuplicatedNameError") {
-      return res.status(httpStatus.CONFLICT).send(error);
+      return res.status(httpStatus.CONFLICT).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -46,12 +47,15 @@ async function updateClass(req: Request, res: Response): Promise<Response> {
     return res.status(httpStatus.OK).send(_class);
   } catch (error) {
     if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
     }
     if (error.name === "DuplicatedNameError") {
-      return res.status(httpStatus.CONFLICT).send(error);
+      return res.status(httpStatus.CONFLICT).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -62,9 +66,10 @@ async function deleteClass(req: Request, res: Response): Promise<Response> {
     return res.status(httpStatus.OK).send({ id: _class.id });
   } catch (error) {
     if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -77,9 +82,10 @@ async function listProjectsByClass(req: Request, res: Response): Promise<Respons
     return res.status(httpStatus.OK).send(projects);
   } catch (error) {
     if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -92,9 +98,10 @@ async function listStudentsByClass(req: Request, res: Response): Promise<Respons
     return res.status(httpStatus.OK).send(students);
   } catch (error) {
     if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -109,12 +116,15 @@ async function applyProject(req: Request, res: Response): Promise<Response> {
     return res.status(httpStatus.CREATED).send(projectClass);
   } catch (error) {
     if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
     }
     if (error.name === "ConflictError") {
-      return res.status(httpStatus.CONFLICT).send(error);
+      return res.status(httpStatus.CONFLICT).send({
+        message: error.message,
+      });
     }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 
@@ -128,12 +138,10 @@ async function removeProject(req: Request, res: Response): Promise<Response> {
     return res.status(httpStatus.OK).send({ id: projectClass.id });
   } catch (error) {
     if (error.name === "NotFoundError") {
-      return res.status(httpStatus.NOT_FOUND).send(error);
+      return res.status(httpStatus.NOT_FOUND).send({
+        message: error.message,
+      });
     }
-    if (error.name === "ConflictError") {
-      return res.status(httpStatus.CONFLICT).send(error);
-    }
-    return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
 

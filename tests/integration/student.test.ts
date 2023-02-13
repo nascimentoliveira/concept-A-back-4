@@ -1,4 +1,4 @@
-import app, { init } from "@/app";
+import app, { init, close } from "@/app";
 import { prisma } from "@/config";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
@@ -12,6 +12,10 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await cleanDb();
+});
+
+afterAll(async () => {
+  await close();
 });
 
 const server = supertest(app);
@@ -40,6 +44,13 @@ describe("POST /students", () => {
       await createStudent(body);
       const response = await server.post("/students").send(body);
       expect(response.status).toBe(httpStatus.CONFLICT);
+    });
+
+    it("should respond with status 404 when classId is non-existent", async () => {
+      const _class = await createClass();
+      const body = generateValidBody(_class.id+1);
+      const response = await server.post("/students").send(body);
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
     it("should respond with status 201 with student data", async () => {
